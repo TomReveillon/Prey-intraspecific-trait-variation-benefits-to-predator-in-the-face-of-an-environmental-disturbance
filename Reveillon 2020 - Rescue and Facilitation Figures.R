@@ -1,3 +1,37 @@
+setwd("~/Activité Professionnelle/LIMNO 2019-2022/Modeling/Indirect Evolutionary Processes")
+
+rm(list=ls())
+
+library(actuar)
+library(cowplot)
+library(data.table)
+library(deSolve)
+library(directlabels)
+library(dplyr)
+library(ggalt)
+library(ggpattern)
+library(ggplot2)
+library(ggrepel)
+library(grid)
+library(gridExtra)
+library(lme4)
+library(magrittr)
+library(plotly)
+library(plyr)
+library(pracma)
+library(quantmod)
+library(rlist)
+library(reshape2)
+library(scales)
+library(tidyr)
+library(zoo)
+
+#############################################################################
+#############################################################################
+##### PREDATOR INDIRECT EVOLUTIONARY PROCESSES FOR PREDATOR-PREY SYSTEM #####
+#############################################################################
+#############################################################################
+
 Data5$P1=as.numeric(Data5$P1)
 Data6$P1=as.numeric(Data6$P1)
 

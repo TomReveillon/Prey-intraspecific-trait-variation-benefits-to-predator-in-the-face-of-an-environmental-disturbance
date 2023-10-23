@@ -1,4 +1,4 @@
-setwd("~/LIMNO 2019-2022/Modeling/Rotifer Long Facilitation")
+setwd("~/Activité Professionnelle/LIMNO 2019-2022/Modeling/Indirect Evolutionary Processes")
 
 rm(list=ls())
 
@@ -26,11 +26,11 @@ library(scales)
 library(tidyr)
 library(zoo)
 
-##########################################################
-##########################################################
-##### PREDATOR FACILITATION FOR PREDATOR-PREY SYSTEM #####
-##########################################################
-##########################################################
+#############################################################################
+#############################################################################
+##### PREDATOR INDIRECT EVOLUTIONARY PROCESSES FOR PREDATOR-PREY SYSTEM #####
+#############################################################################
+#############################################################################
 
 # Import the datasets
 DataC=read.table("~/Activité Professionnelle/LIMNO 2019-2022/Experiments/Functional Response Beads/Data_CEB.txt", h=T, dec=",")
