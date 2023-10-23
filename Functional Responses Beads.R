@@ -1,4 +1,4 @@
-setwd("~/LIMNO 2019-2022/Experiments/Functional Response Beads")
+setwd("~/LIMNO 2019-2022/Experiments/Predator Ingestion Beads")
 
 rm(list=ls())
 

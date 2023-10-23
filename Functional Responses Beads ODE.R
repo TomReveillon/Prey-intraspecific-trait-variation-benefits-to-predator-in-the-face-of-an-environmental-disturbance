@@ -1,4 +1,4 @@
-setwd("~/LIMNO 2019-2022/Experiments/Functional Response Beads")
+setwd("~/LIMNO 2019-2022/Experiments/Predator Ingestion Beads")
 
 rm(list=ls())
 
@@ -214,7 +214,7 @@ Data5[,c(4:6)]=Data5[,c(4:6)]/4
 Data5[,c(4:6)]=round(Data5[,c(4:6)],4)
 
 # Include raw data
-Data6=read.table("~/Activité Professionnelle/LIMNO 2019-2022/Experiments/Functional Response Beads/Data_FRBP.txt", h=T, dec=",")
+Data6=read.table("Data_FRBP.txt", h=T, dec=",")
 Data6[,c(3:8)] %<>% mutate_if(is.character,as.numeric)
 
 # Correct standard errors and confidence intervals
