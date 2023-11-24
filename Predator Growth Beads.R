@@ -182,7 +182,6 @@ FuncLi=function(Model, Day) {
   return(Out)
 }
 
-
 # Exponential model
 SetEx=function(mCall,LHS,data) {
   xy=sortedXyData(mCall[["x"]],LHS,data)
@@ -215,7 +214,6 @@ FuncEx=function(Model,Day) {
   return(Out)
 }
 
-
 # Logistic model
 SetLo=function(Coef){
   K=Coef[1]; r=1/(Coef[3]); b=K/(1 + exp(Coef[2]/Coef[3]))
@@ -246,7 +244,6 @@ FuncLo=function(Model,Day) {
   Out=list(Model=Model, Summary=Summary, Parameters=Parameters, Rates=Rates)
   return(Out)
 }
-
 
 # Extinction model
 SetEc=function(mCall,LHS,data) {
@@ -310,7 +307,6 @@ SummaLi=round(cbind(do.call("rbind",SummaLi)),4)
 rownames(SummaLi)=c()
 ModelLi=unlist(lapply(OutLi, function (x) x[c("Model")]),recursive=F)
 
-
 # Exponential model
 ModEx=function(x) {
   FitEx=nls(MeanDens ~ SSexpo(Day, r, b), data=x)
@@ -329,7 +325,6 @@ SummaEx=round(as.data.frame(do.call("rbind",SummaEx)),4)
 rownames(SummaEx)=c()
 ModelEx=unlist(lapply(OutEx, function (x) x[c("Model")]),recursive=F)
 
-
 # Logistic model
 ModLo=function(x) {
   FitLo=nls(MeanDens ~ SSlogis(Day, b, K, r), data=x)
@@ -347,7 +342,6 @@ SummaLo=bind_rows(lapply(OutLo, function (x) x[c("Summary")]))
 SummaLo=round(cbind(do.call("rbind",SummaLo)),4)
 rownames(SummaLo)=c()
 ModelLo=unlist(lapply(OutLo, function (x) x[c("Model")]),recursive=F)
-
 
 # Extinction model
 ModEc=function(x) {
