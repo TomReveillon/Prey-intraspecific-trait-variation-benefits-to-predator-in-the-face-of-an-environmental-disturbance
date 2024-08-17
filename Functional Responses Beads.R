@@ -1,4 +1,4 @@
-setwd("~/LIMNO 2019-2022/Experiments/Predator Ingestion Beads")
+setwd("~/LIMNO 2019-2023/Experiments/Predator Ingestion Beads")
 
 rm(list=ls())
 
@@ -318,61 +318,6 @@ ggplot(Data4, aes(IDensP, IngesP, group=interaction(Strain,Bead))) +
   theme(axis.title.x=element_text(face="plain", colour="black", size=18)) +
   scale_y_continuous(labels=function(x) sprintf("%.1f", x), breaks=seq(0,0.4,by=0.1), limits=c(0,0.4)) +
   scale_x_continuous(labels=function(x) sprintf("%.1f", x), breaks=seq(0,15,by=3), limits=c(0,16)) +
-  theme(axis.line=element_line(colour="black")) + theme(panel.background=element_blank()) +
-  theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank()) +
-  scale_fill_manual(values=c("CR1"="mediumpurple3","CR2"="cornflowerblue","CR3"="chartreuse3","CR4"="gold2","CR5"="darkorange1","CR6"="tomato2")) +
-  scale_color_manual(values=c("CR1"="mediumpurple3","CR2"="cornflowerblue","CR3"="chartreuse3","CR4"="gold2","CR5"="darkorange1","CR6"="tomato2")) +
-  scale_linetype_manual(values=c("C"="solid","L"="solid","M"="solid","H"="solid")) +
-  theme(strip.text.x=element_blank()) +
-  facet_wrap(~Strain, scales="free", ncol=3, nrow=2) +
-  theme(legend.position="none")
-dev.off()
-
-
-#############################################
-### Plot functional response effect sizes ###
-#############################################
-
-# Calculate particle densities
-AlgaP=rep(NA,length(Data4[,1]))
-BeadP=rep(NA,length(Data4[,1]))
-for (i in 1:length(Data4[,1])) {
-  if (Data4[i,2]=="C") Data4$AlgaP[i]=Data4[i,3]*1.000
-  if (Data4[i,2]=="C") Data4$BeadP[i]=Data4[i,3]*0.000
-  if (Data4[i,2]=="L") Data4$AlgaP[i]=Data4[i,3]*1.000
-  if (Data4[i,2]=="L") Data4$BeadP[i]=Data4[i,3]*0.063
-  if (Data4[i,2]=="M") Data4$AlgaP[i]=Data4[i,3]*1.000
-  if (Data4[i,2]=="M") Data4$BeadP[i]=Data4[i,3]*0.125
-  if (Data4[i,2]=="H") Data4$AlgaP[i]=Data4[i,3]*1.000
-  if (Data4[i,2]=="H") Data4$BeadP[i]=Data4[i,3]*0.250
-}
-
-# Calculate effect sizes
-ESL=round(subset(Data4, Bead=="C")$IngesP-subset(Data4, Bead=="L")$IngesP,4)
-ESM=round(subset(Data4, Bead=="C")$IngesP-subset(Data4, Bead=="M")$IngesP,4)
-ESH=round(subset(Data4, Bead=="C")$IngesP-subset(Data4, Bead=="H")$IngesP,4)
-
-# Create a dataset
-Data5=subset(Data4, !Bead=="C")
-Data5=data.frame(Strain=Data5$Strain, Bead=Data5$Bead, IDensP=Data5$IDensP, AlgaP=Data5$AlgaP, BeadP=Data5$BeadP, Ratio=c(ESH,ESM,ESL))
-Data5$Ratio[is.infinite(Data5$Ratio)]=0
-Data5$Ratio[is.na(Data5$Ratio)]=0
-
-# Create a dataset for labels
-DataL=as.data.frame(Data5 %>% group_by(Strain,Bead) %>% filter(IDensP == max(IDensP)))
-
-tiff('Functional Responses Ratios.tiff', units="in", width=15, height=8, res=1000)
-ggplot(Data5, aes(IDensP, Ratio), group=interaction(Strain,Bead)) +
-  geom_line(aes(color=Strain, linetype=Bead), size=1) +
-  geom_text_repel(DataL, mapping=aes(label=Bead, color=Strain), size=5, nudge_y=0, nudge_x=1, direction="y", segment.color="transparent") +
-  ylab(expression("Difference of"~italic('B. calyciflorus')~'ingestion rates')) +
-  xlab(expression(italic('C. reinhardtii')~'density'~'('*10^5~cells~mL^-1*')')) +
-  theme(axis.text.y=element_text(face="plain", colour="black", size=18)) +  
-  theme(axis.text.x=element_text(face="plain", colour="black", size=18)) + 
-  theme(axis.title.y=element_text(face="plain", colour="black", size=18)) +
-  theme(axis.title.x=element_text(face="plain", colour="black", size=18)) +
-  scale_y_continuous(labels=function(x) sprintf("%.1f", x), breaks=seq(0,0.4,by=0.1), limits=c(-0.02,0.4)) +
-  scale_x_continuous(labels=function(x) sprintf("%.1f", x), breaks=seq(0,15,by=3), limits=c(0,15)) +
   theme(axis.line=element_line(colour="black")) + theme(panel.background=element_blank()) +
   theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank()) +
   scale_fill_manual(values=c("CR1"="mediumpurple3","CR2"="cornflowerblue","CR3"="chartreuse3","CR4"="gold2","CR5"="darkorange1","CR6"="tomato2")) +
