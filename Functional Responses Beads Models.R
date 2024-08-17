@@ -1,4 +1,4 @@
-setwd("~/LIMNO 2019-2022/Experiments/Predator Ingestion Beads")
+setwd("~/LIMNO 2019-2023/Experiments/Predator Ingestion Beads")
 
 rm(list=ls())
 
@@ -304,7 +304,7 @@ Data4$Selection=ifelse(Data4[,1] %in% Data5[,1] & Data4[,2] %in% Data5[,2] & Dat
 
 tiff('Functional Responses Beads Models.tiff', units="in", width=15, height=20, res=1000)
 ggplot(Data4, aes(IDensP, IngesP)) +
-  geom_line(data=subset(Data4, Selection=="Rejected"), aes(linetype=Model, size=Model), color="grey70") +
+  geom_line(data=subset(Data4, Selection=="Rejected"), aes(linetype=Model, size=Model), color="grey60") +
   geom_line(data=subset(Data4, Selection=="Accepted"), aes(color=Strain, linetype=Model, size=Model)) +
   geom_point(data=Data, aes(IDens/10^5, Inges, color=Strain), size=2, pch=16) +
   ylab(expression(italic('B. calyciflorus')~'ingestion rate'~'('*cells~sec^-1~rotifer^-1*')')) +

@@ -1,4 +1,4 @@
-setwd("~/LIMNO 2019-2022/Experiments/Predator Ingestion Beads")
+setwd("~/LIMNO 2019-2023/Experiments/Predator Ingestion Beads")
 
 rm(list=ls())
 
@@ -150,3 +150,35 @@ rownames(CoefHII)=c()
 FuncHII=function(x) {
   ModHII=mle2(Likelihood, start=list(a=0.1, h=5, c=5, sigma=1), control=list(maxit=1000), data=list(IDens=x$IDens, DDens=x$DDens, DensB=x$DensB, P=x$Pred, Time=x$Time))}
 OutHII=lapply(list(Data), FuncHII)
+
+# Specify the variables as numeric or factor
+CoefHII[,c(3:4)] %<>% mutate_if(is.character,as.numeric)
+
+# Create a dataset
+Data2=data.frame(Strain=CoefHII[,1], Coeff=CoefHII[,3], CoeffLSD=CoefHII[,3]-CoefHII[,4], CoeffUSD=CoefHII[,3]+CoefHII[,4])
+Data2[,c(2:4)]=round(Data2[,c(2:4)],4)
+Data2[,c(2:4)][Data2[,c(2:4)]<0]=0
+Data2=Data2[c(3,7,11,15,19,23),]
+
+
+###########################################
+### Plotting predicted bed coefficients ###
+###########################################
+
+tiff('Microplastic Coefficient Beads.tiff', units="in", width=8, height=8, res=1000)
+ggplot(Data2, aes(Strain, Coeff, group=Strain)) +
+  geom_point(aes(color=Strain), size=5, pch=16) +
+  geom_errorbar(aes(Strain, Coeff, ymin=CoeffLSD, ymax=CoeffUSD, color=Strain), linetype="solid", alpha=0.7, size=1.2, width=0.2) +
+  ylab(expression(italic('B. calyciflorus')~'microplastic coefficient')) +
+  xlab(expression(italic('C. reinhardtii')~'strain')) +
+  theme(axis.text.y=element_text(face="plain", colour="black", size=18)) +  
+  theme(axis.text.x=element_text(face="plain", colour="black", size=18)) + 
+  theme(axis.title.y=element_text(face="plain", colour="black", size=18)) +
+  theme(axis.title.x=element_text(face="plain", colour="black", size=18)) +
+  scale_y_continuous(labels=function(x) sprintf("%.0f", x), breaks=seq(0,120,by=30), limits=c(0,120)) +
+  scale_x_discrete(labels=c("CR1"=expression(C[R1]),"CR2"=expression(C[R2]),"CR3"=expression(C[R3]),"CR4"=expression(C[R4]),"CR5"=expression(C[R5]),"CR6"=expression(C[R6]))) +
+  theme(axis.line=element_line(colour="black")) + theme(panel.background=element_blank()) +
+  theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank()) +
+  scale_color_manual(values=c("CR1"="mediumpurple3","CR2"="steelblue2","CR3"="chartreuse3","CR4"="gold2","CR5"="darkorange1","CR6"="tomato2")) +
+  theme(legend.position="none")
+dev.off()

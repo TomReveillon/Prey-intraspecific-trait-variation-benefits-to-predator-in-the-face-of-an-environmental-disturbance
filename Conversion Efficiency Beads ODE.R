@@ -1,4 +1,4 @@
-setwd("~/LIMNO 2019-2022/Experiments/Predator Ingestion Beads")
+setwd("~/LIMNO 2019-2023/Experiments/Predator Ingestion Beads")
 
 rm(list=ls())
 
@@ -32,7 +32,7 @@ library(rootSolve)
 #####################################################################################
 
 # Import the dataset
-DataFRB=read.table("~/Activité Professionnelle/LIMNO 2019-2022/Experiments/Functional Response Beads/Data_FRBPODE.txt", h=T, dec=",")
+DataFRB=read.table("~/Activité Professionnelle/LIMNO 2019-2023/Experiments/Functional Response Beads/Data_FRBPODE.txt", h=T, dec=",")
 summary(DataFRB)
 names(DataFRB)
 
@@ -72,7 +72,7 @@ HandlingsB=cbind(Strain=Strain,Bead=Bead,HandlingsB)
 rownames(HandlingsB)=c()
 
 # Import the dataset
-DataRGB=read.table("~/Activité Professionnelle/LIMNO 2019-2022/Experiments/Predator Growth Beads/Data_RGB.txt", h=T, dec=",")
+DataRGB=read.table("~/Activité Professionnelle/LIMNO 2019-2023/Experiments/Predator Growth Beads/Data_RGB.txt", h=T, dec=",")
 summary(DataRGB)
 names(DataRGB)
 
