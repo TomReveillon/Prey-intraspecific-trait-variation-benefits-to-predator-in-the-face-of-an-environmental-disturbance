@@ -213,7 +213,7 @@ Data5[,c(4:6)][Data5[,c(4:6)]<0]=0
 Data5[,c(4:6)]=Data5[,c(4:6)]/4
 Data5[,c(4:6)]=round(Data5[,c(4:6)],4)
 
-# Include raw data
+# Include experimental points
 Data6=read.table("Data_FRBP.txt", h=T, dec=",")
 Data6[,c(3:8)] %<>% mutate_if(is.character,as.numeric)
 
