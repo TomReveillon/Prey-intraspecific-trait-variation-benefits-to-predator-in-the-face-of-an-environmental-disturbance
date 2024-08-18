@@ -208,11 +208,11 @@ FuncHIII=function(x, ModHIII) {
   Out=list(Model=ModHIII, Summary=Summary, Parameters=Parameters, Rates=Rates)
   return(Out)
 }
-OutHIII=lapply(SplitData2[-c(1,7,9,12,14,17:24)], FuncHIII)
+OutHIII=lapply(SplitData2[-c(1,7,9,14,17:24)], FuncHIII)
 
 RateHIII=bind_rows(lapply(OutHIII, function (x) x[c("Rates")]))
 RateHIII=round(as.data.frame(do.call("rbind",RateHIII)),4)
-RateHIII=cbind(Strain=Strain[-c(1:6,37:42,49:54,67:72,79:84,97:144)],Bead=Bead[-c(1:6,37:42,49:54,67:72,79:84,97:144)],Model="Holling III",RateHIII)
+RateHIII=cbind(Strain=Strain[-c(1:6,37:42,49:54,79:84,97:144)],Bead=Bead[-c(1:6,37:42,49:54,79:84,97:144)],Model="Holling III",RateHIII)
 rownames(RateHIII)=c()
 ParamHIII=bind_rows(lapply(OutHIII, function (x) x[c("Parameters")]))
 ParamHIII=round(as.data.frame(do.call("rbind",ParamHIII)),4)
@@ -255,7 +255,7 @@ for (i in 1:length(ModelHIII)) {IngesP[[i]]=predict(ModelHIII[[i]], newdata=data
 for (i in 1:length(ModelHIII)) {IngesPSD[[i]]=predictNLS(ModelHIII[[i]], newdata=data.frame(IDens=unique(IDensP)), interval="confidence", alpha=0.05, nsim=10000)[[1]][,3]}
 for (i in 1:length(ModelHIII)) {IngesPLCI[[i]]=predictNLS(ModelHIII[[i]], newdata=data.frame(IDens=unique(IDensP)), interval="confidence", alpha=0.05, nsim=10000)[[1]][,5]}
 for (i in 1:length(ModelHIII)) {IngesPUCI[[i]]=predictNLS(ModelHIII[[i]], newdata=data.frame(IDens=unique(IDensP)), interval="confidence", alpha=0.05, nsim=10000)[[1]][,6]}
-DataHIII=data.frame(Data3[-c(1:150,901:1050,1201:1350,1651:1800,1951:2100,2401:3600),], IngesP=unlist(IngesP), IngesPLSD=unlist(IngesP)-unlist(IngesPSD), IngesPUSD=unlist(IngesP)+unlist(IngesPSD), IngesPLCI=unlist(IngesPLCI), IngesPUCI=unlist(IngesPUCI), Model="Holling III")
+DataHIII=data.frame(Data3[-c(1:150,901:1050,1201:1350,1951:2100,2401:3600),], IngesP=unlist(IngesP), IngesPLSD=unlist(IngesP)-unlist(IngesPSD), IngesPUSD=unlist(IngesP)+unlist(IngesPSD), IngesPLCI=unlist(IngesPLCI), IngesPUCI=unlist(IngesPUCI), Model="Holling III")
 
 
 ############################################
@@ -265,8 +265,8 @@ DataHIII=data.frame(Data3[-c(1:150,901:1050,1201:1350,1651:1800,1951:2100,2401:3
 # Extract combinations of names
 Strain=rep(unique(Data2[,c("Strain")]),4)
 Bead=rep(unique(Data2[,c("Bead")]), each=6)
-Strain1=Strain[-c(1,7,9,12,14,17:24)]
-Bead1=Bead[-c(1,7,9,12,14,17:24)]
+Strain1=Strain[-c(1,7,9,14,17:24)]
+Bead1=Bead[-c(1,7,9,14,17:24)]
 
 # Summaries of models
 SummaHI$Strain=Strain; SummaHI$Bead=Bead; SummaHI$Model="Holling I"
@@ -282,7 +282,7 @@ LR1=list(); LR2=list()
 for (i in 1:length(Strain)) {
   for (j in 1:length(Strain1)) {
     LR1[[i]]=lrtest(ModelHII[[i]],ModelHI[[i]])
-    LR2[[j]]=lrtest(ModelHIII[[j]],ModelHI[-c(1,7,9,12,14,17:24)][[j]])
+    LR2[[j]]=lrtest(ModelHIII[[j]],ModelHI[-c(1,7,9,14,17:24)][[j]])
   }
 }
 

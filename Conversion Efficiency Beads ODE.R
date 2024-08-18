@@ -32,7 +32,7 @@ library(rootSolve)
 #####################################################################################
 
 # Import the dataset
-DataFRB=read.table("~/Activité Professionnelle/LIMNO 2019-2023/Experiments/Functional Response Beads/Data_FRBPODE.txt", h=T, dec=",")
+DataFRB=read.table("~/Activité Professionnelle/LIMNO 2019-2023/Experiments/Predator Ingestion Beads/Data_FRBPODE.txt", h=T, dec=",")
 summary(DataFRB)
 names(DataFRB)
 
