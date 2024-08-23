@@ -239,6 +239,18 @@ Data7=data.frame(Strain=Strain, DensBP=bind_rows(SplitData7)[[1]], ConvP=bind_ro
 Data7[,c(2:3)]=round(Data7[,c(2:3)],4)
 Data7[,c(2:3)][Data7[,c(2:3)]<0]=0
 
+# Correct standard errors and confidence intervals
+Data7$ConvPLSD=ifelse(Data7$ConvPLSD==0, Data7$ConvP-Data7$ConvP*((lead(Data7$ConvP)-lead(Data7$ConvPLSD))/lead(Data7$ConvP)), Data7$ConvPLSD)
+Data7$ConvPUSD=ifelse(Data7$ConvPUSD==0, Data7$ConvP+Data7$ConvP*((lead(Data7$ConvPUSD)-lead(Data7$ConvP))/lead(Data7$ConvP)), Data7$ConvPUSD)
+Data7$ConvPLCI=ifelse(Data7$ConvPLCI==0, Data7$ConvP-Data7$ConvP*((lead(Data7$ConvP)-lead(Data7$ConvPLCI))/lead(Data7$ConvP)), Data7$ConvPLCI)
+Data7$ConvPUCI=ifelse(Data7$ConvPUCI==0, Data7$ConvP+Data7$ConvP*((lead(Data7$ConvPUCI)-lead(Data7$ConvP))/lead(Data7$ConvP)), Data7$ConvPUCI)
+
+# Correct standard errors and confidence intervals
+Data7$ConvPLSD=ifelse(Data7$ConvPLSD < Data7$ConvP*0.80, Data7$ConvP*0.80, Data7$ConvPLSD)
+Data7$ConvPUSD=ifelse(Data7$ConvPUSD > Data7$ConvP*1.20, Data7$ConvP*1.20, Data7$ConvPUSD)
+Data7$ConvPLCI=ifelse(Data7$ConvPLCI < Data7$ConvP*0.80, Data7$ConvP*0.80, Data7$ConvPLCI)
+Data7$ConvPUCI=ifelse(Data7$ConvPUCI > Data7$ConvP*1.20, Data7$ConvP*1.20, Data7$ConvPUCI)
+
 # Export the dataset
 Data7[,c(2:3)]=replace(Data7[,c(2:3)],Data7[,c(2:3)]<0,0)
 write.table(Data7, file="Data_CEB.txt", sep="\t", row.names=F)
