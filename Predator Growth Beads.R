@@ -1,4 +1,4 @@
-setwd("~/LIMNO 2019-2022/Experiments/Predator Growth Beads")
+setwd("~/LIMNO 2019-2023/Experiments/Predator Growth Beads")
 
 rm(list=ls())
 
@@ -411,6 +411,12 @@ Data4[,c(4:8)][is.na(Data4[,c(4:8)])]=0
 Data4=Data4[order(Data4$Strain,Data4$Bead),]
 
 # Correct standard errors and confidence intervals
+Data4$DensPLSD=ifelse(Data4$DensPLSD==0, Data4$DensP-Data4$DensP*((lead(Data4$DensP)-lead(Data4$DensPLSD))/lead(Data4$DensP)), Data4$DensPLSD)
+Data4$DensPUSD=ifelse(Data4$DensPUSD==0, Data4$DensP+Data4$DensP*((lead(Data4$DensPUSD)-lead(Data4$DensP))/lead(Data4$DensP)), Data4$DensPUSD)
+Data4$DensPLCI=ifelse(Data4$DensPLCI==0, Data4$DensP-Data4$DensP*((lead(Data4$DensP)-lead(Data4$DensPLCI))/lead(Data4$DensP)), Data4$DensPLCI)
+Data4$DensPUCI=ifelse(Data4$DensPUCI==0, Data4$DensP+Data4$DensP*((lead(Data4$DensPUCI)-lead(Data4$DensP))/lead(Data4$DensP)), Data4$DensPUCI)
+
+# Correct standard errors and confidence intervals
 Data4$DensPLSD=ifelse(Data4$DensPLSD < Data4$DensP*0.80, Data4$DensP*0.80, Data4$DensPLSD)
 Data4$DensPUSD=ifelse(Data4$DensPUSD > Data4$DensP*1.20, Data4$DensP*1.20, Data4$DensPUSD)
 Data4$DensPLCI=ifelse(Data4$DensPLCI < Data4$DensP*0.80, Data4$DensP*0.80, Data4$DensPLCI)
@@ -433,7 +439,7 @@ ggplot(Data4, aes(DayP, DensP, group=interaction(Strain,Bead))) +
   theme(axis.text.x=element_text(face="plain", colour="black", size=18)) + 
   theme(axis.title.y=element_text(face="plain", colour="black", size=18)) +
   theme(axis.title.x=element_text(face="plain", colour="black", size=18)) +
-  scale_y_continuous(labels=function(x) sprintf("%.0f", x), breaks=seq(0,25,by=5), limits=c(0,25)) +
+  scale_y_continuous(labels=function(x) sprintf("%.0f", x), breaks=seq(0,24,by=6), limits=c(0,24)) +
   scale_x_continuous(labels=function(x) sprintf("%.0f", x), breaks=seq(0,5,by=1), limits=c(0,5.5)) +
   theme(axis.line=element_line(colour="black")) + theme(panel.background=element_blank()) +
   theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank()) +
@@ -455,7 +461,7 @@ ggplot(Data4, aes(DayP, DensP, group=interaction(Strain,Bead))) +
   theme(axis.text.x=element_text(face="plain", colour="black", size=18)) + 
   theme(axis.title.y=element_text(face="plain", colour="black", size=18)) +
   theme(axis.title.x=element_text(face="plain", colour="black", size=18)) +
-  scale_y_continuous(labels=function(x) sprintf("%.0f", x), breaks=seq(0,25,by=5), limits=c(0,25)) +
+  scale_y_continuous(labels=function(x) sprintf("%.0f", x), breaks=seq(0,24,by=6), limits=c(0,24)) +
   scale_x_continuous(labels=function(x) sprintf("%.0f", x), breaks=seq(0,5,by=1), limits=c(0,5.5)) +
   theme(axis.line=element_line(colour="black")) + theme(panel.background=element_blank()) +
   theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank()) +
@@ -465,6 +471,121 @@ ggplot(Data4, aes(DayP, DensP, group=interaction(Strain,Bead))) +
   theme(strip.text.x=element_blank()) +
   facet_wrap(~Strain, scales="free", ncol=3, nrow=2) +
   theme(legend.position="none")
+dev.off()
+
+
+########################################
+### Plotting predicted growth curves ###
+########################################
+
+# Create a dataset
+Data4=rbind(DataLi[,c(1:9)],DataEx[,c(1:9)],DataLo[,c(1:9)],DataEc[,c(1:9)])
+Data4[,c(4:8)]=round(Data4[,c(4:8)],6)
+Data4[,c(4:8)][is.na(Data4[,c(4:8)])]=0
+Data4=Data4[order(Data4$Strain,Data4$Bead),]
+
+# Correct standard errors and confidence intervals
+Data4$DensPLSD=ifelse(Data4$DensPLSD==0, Data4$DensP-Data4$DensP*((lead(Data4$DensP)-lead(Data4$DensPLSD))/lead(Data4$DensP)), Data4$DensPLSD)
+Data4$DensPUSD=ifelse(Data4$DensPUSD==0, Data4$DensP+Data4$DensP*((lead(Data4$DensPUSD)-lead(Data4$DensP))/lead(Data4$DensP)), Data4$DensPUSD)
+Data4$DensPLCI=ifelse(Data4$DensPLCI==0, Data4$DensP-Data4$DensP*((lead(Data4$DensP)-lead(Data4$DensPLCI))/lead(Data4$DensP)), Data4$DensPLCI)
+Data4$DensPUCI=ifelse(Data4$DensPUCI==0, Data4$DensP+Data4$DensP*((lead(Data4$DensPUCI)-lead(Data4$DensP))/lead(Data4$DensP)), Data4$DensPUCI)
+
+# Correct standard errors and confidence intervals
+Data4$DensPLSD=ifelse(Data4$DensPLSD < Data4$DensP*0.80, Data4$DensP*0.80, Data4$DensPLSD)
+Data4$DensPUSD=ifelse(Data4$DensPUSD > Data4$DensP*1.20, Data4$DensP*1.20, Data4$DensPUSD)
+Data4$DensPLCI=ifelse(Data4$DensPLCI < Data4$DensP*0.80, Data4$DensP*0.80, Data4$DensPLCI)
+Data4$DensPUCI=ifelse(Data4$DensPUCI > Data4$DensP*1.20, Data4$DensP*1.20, Data4$DensPUCI)
+
+# Arrange the datasets
+Data=Data %>% arrange(factor(Bead, levels=unique(Data$Bead)))
+Data4=Data4 %>% arrange(factor(Bead, levels=unique(Data4$Bead)))
+
+# Include experimental points
+Data4$DayE=c(Reduce(rbind,append(list(matrix(Data$Day,30)),rep(NA,21))))
+Data4$DensE=c(Reduce(rbind,append(list(matrix(Data$Count,30)),rep(NA,21))))
+
+# Include positions for labels
+DataL=as.data.frame(Data4 %>% group_by(Bead,Strain) %>% filter(DayP == max(DayP)))
+Data4$DayM=c(Reduce(rbind,append(list(matrix(DataL$DayP,1)),rep(NA,50))))
+Data4$DensM=c(Reduce(rbind,append(list(matrix(DataL$DensP,1)),rep(NA,50))))
+
+# Create names for labels
+Data4$Labels=factor(Data4$Strain, levels=unique(Data4$Strain), labels=c(expression(C[R1]),expression(C[R2]),expression(C[R3]),expression(C[R4]),expression(C[R5]),expression(C[R6])))
+
+# Split the dataset
+SplitData4=split(Data4, list(Data4$Bead))
+
+PlotFunc=function(x) {
+  ggplot(x, aes(DayP, DensP, group=interaction(Strain,Bead))) +
+    geom_line(aes(color=Strain, linetype=Bead), size=1) +
+    geom_point(data=x, aes(DayE, DensE, color=Strain), size=2, pch=16, position=position_jitter(h=0, w=0.2)) +
+    ylab(expression(italic('B. calyciflorus')~'density'~'('*rotifers~mL^-1*')')) + xlab(expression('Time (days)')) +
+    theme(axis.text.y=element_text(face="plain", colour="black", size=18)) +  
+    theme(axis.text.x=element_text(face="plain", colour="black", size=18)) + 
+    theme(axis.title.y=element_blank()) +
+    theme(axis.title.x=element_blank()) +
+    scale_x_continuous(labels=function(x) sprintf("%.0f", x), breaks=seq(0,5,by=1), limits=c(0,5)) +
+    theme(axis.line=element_line(colour="black")) + theme(panel.background=element_blank()) +
+    theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank()) +
+    scale_color_manual(values=c("CR1"="mediumpurple3","CR2"="cornflowerblue","CR3"="chartreuse3","CR4"="gold2","CR5"="darkorange1","CR6"="tomato2")) +
+    scale_linetype_manual(values=c("C"="solid","L"="solid","M"="solid","H"="solid")) +
+    theme(legend.position="none")
+}
+
+tiff('Growth Curves Beads.tiff', units="in", width=12, height=12, res=1000)
+Panel=lapply(SplitData4, PlotFunc)
+Panel[[1]]=Panel[[1]] + scale_y_continuous(labels=sprintf(seq(0,24,by=6), fmt="%.0f"), breaks=seq(0,24,by=6), limits=c(0,24))
+Panel[[2]]=Panel[[2]] + scale_y_continuous(labels=sprintf(seq(0,20,by=5), fmt="%.0f"), breaks=seq(0,20,by=5), limits=c(0,20))
+Panel[[3]]=Panel[[3]] + scale_y_continuous(labels=sprintf(seq(0,12,by=3), fmt="%.0f"), breaks=seq(0,12,by=3), limits=c(0,12))
+Panel[[4]]=Panel[[4]] + scale_y_continuous(labels=sprintf(seq(0,8,by=2), fmt="%.0f"), breaks=seq(0,8,by=2), limits=c(0,8))
+Panel[[1]]=Panel[[1]] + geom_text(mapping=aes(x=0, y=Inf, group=Bead), color="black", label="C", size=5, vjust=2.2, hjust=0)
+Panel[[2]]=Panel[[2]] + geom_text(mapping=aes(x=0, y=Inf, group=Bead), color="black", label="L", size=5, vjust=2.2, hjust=0)
+Panel[[3]]=Panel[[3]] + geom_text(mapping=aes(x=0, y=Inf, group=Bead), color="black", label="M", size=5, vjust=2.2, hjust=0)
+Panel[[4]]=Panel[[4]] + geom_text(mapping=aes(x=0, y=Inf, group=Bead), color="black", label="H", size=5, vjust=2.2, hjust=0)
+Panel[[1]]=Panel[[1]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.20),"cm"))
+Panel[[2]]=Panel[[2]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.20),"cm"))
+Panel[[3]]=Panel[[3]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.20),"cm"))
+Panel[[4]]=Panel[[4]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.55),"cm"))
+Yaxis=textGrob(expression(italic('B. calyciflorus')~'density'~'('*rotifers~mL^-1*')'), gp=gpar(fontface="bold", fontsize=18), rot=90)
+Xaxis=textGrob(expression('Time (days)'), gp=gpar(fontface="bold", fontsize=18), rot=0)
+grid.arrange(grobs=Panel, left=Yaxis, bottom=Xaxis, ncol=2, nrow=2)
+dev.off()
+
+PlotFunc=function(x) {
+  ggplot(x, aes(DayP, DensP, group=interaction(Strain,Bead))) +
+    geom_line(aes(color=Strain, linetype=Bead), size=1) +
+    geom_ribbon(aes(ymin=DensPLSD, ymax=DensPUSD, fill=Strain, color=Strain), linetype="solid", size=0.5, alpha=0.3) +
+    geom_point(data=x, aes(DayE, DensE, color=Strain), size=2, pch=16, position=position_jitter(h=0, w=0.2)) +
+    geom_text(data=x, mapping=aes(x=-Inf, y=Inf, color=Strain, label=Labels), size=5, vjust=1.6, hjust=-0.5, parse=T) +
+    ylab(expression(italic('B. calyciflorus')~'density'~'('*rotifers~mL^-1*')')) + xlab(expression('Time (days)')) +
+    theme(axis.text.y=element_text(face="plain", colour="black", size=18)) +  
+    theme(axis.text.x=element_text(face="plain", colour="black", size=18)) + 
+    theme(axis.title.y=element_blank()) +
+    theme(axis.title.x=element_blank()) +
+    scale_x_continuous(labels=function(x) sprintf("%.0f", x), breaks=seq(0,5,by=1), limits=c(0,5)) +
+    theme(axis.line=element_line(colour="black")) + theme(panel.background=element_blank()) +
+    theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank()) +
+    scale_fill_manual(values=c("CR1"="mediumpurple3","CR2"="cornflowerblue","CR3"="chartreuse3","CR4"="gold2","CR5"="darkorange1","CR6"="tomato2")) +
+    scale_color_manual(values=c("CR1"="mediumpurple3","CR2"="cornflowerblue","CR3"="chartreuse3","CR4"="gold2","CR5"="darkorange1","CR6"="tomato2")) +
+    scale_linetype_manual(values=c("C"="solid","L"="solid","M"="solid","H"="solid")) +
+    theme(strip.text.x=element_blank()) +
+    facet_wrap(~Strain, scales="free", ncol=3, nrow=2) +
+    theme(legend.position="none")
+}
+
+tiff('Growth Curves Beads Intervals.tiff', units="in", width=25, height=16.5, res=1000)
+Panel=lapply(SplitData4, PlotFunc)
+Panel[[1]]=Panel[[1]] + scale_y_continuous(labels=sprintf(seq(0,24,by=6), fmt="%.0f"), breaks=seq(0,24,by=6), limits=c(0,24))
+Panel[[2]]=Panel[[2]] + scale_y_continuous(labels=sprintf(seq(0,20,by=5), fmt="%.0f"), breaks=seq(0,20,by=5), limits=c(0,20))
+Panel[[3]]=Panel[[3]] + scale_y_continuous(labels=sprintf(seq(0,12,by=3), fmt="%.0f"), breaks=seq(0,12,by=3), limits=c(0,12))
+Panel[[4]]=Panel[[4]] + scale_y_continuous(labels=sprintf(seq(0,8,by=2), fmt="%.0f"), breaks=seq(0,8,by=2), limits=c(0,8))
+Panel[[1]]=Panel[[1]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.20),"cm"))
+Panel[[2]]=Panel[[2]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.20),"cm"))
+Panel[[3]]=Panel[[3]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.20),"cm"))
+Panel[[4]]=Panel[[4]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.55),"cm"))
+Yaxis=textGrob(expression(italic('B. calyciflorus')~'density'~'('*rotifers~mL^-1*')'), gp=gpar(fontface="bold", fontsize=18), rot=90)
+Xaxis=textGrob(expression('Time (days)'), gp=gpar(fontface="bold", fontsize=18), rot=0)
+grid.arrange(grobs=Panel, left=Yaxis, bottom=Xaxis, ncol=2, nrow=2)
 dev.off()
 
 
@@ -503,9 +624,9 @@ DataGR=subset(data.frame(Strain,Bead,DayP,Model), !DayP %in% c("4.8","4.9","5.0"
 DataGR=data.frame(DataGR,RateGR[,c(1,3,4)]); DataGR=DataGR[,c(1,2,3,5,6,7,4)]
 
 
-###################################
-### Plot predicted growth rates ###
-###################################
+#######################################
+### Plotting predicted growth rates ###
+#######################################
 
 # Create a dataset
 Data5=DataGR[,c(1:7)]
@@ -536,9 +657,9 @@ ggplot(Data5, aes(DayP, GrowP, group=interaction(Strain,Bead))) +
 dev.off()
 
 
-##########################################
-### Plot predicted reproduction curves ###
-##########################################
+##############################################
+### Plotting predicted reproduction curves ###
+##############################################
 
 # Polynomial model
 ModPo=function(x) {nls(AveEgg ~ a + b * Day + c * Day^2, start=c(a=0.5, b=0.5, c=-0.5), data=x)}
@@ -590,4 +711,96 @@ ggplot(Data7, aes(DayP, EggP, group=interaction(Strain,Bead))) +
   theme(strip.text.x=element_blank()) +
   facet_wrap(~Strain, scales="free", ncol=3, nrow=2) +
   theme(legend.position="none")
+dev.off()
+
+
+##############################################
+### Plotting predicted reproduction curves ###
+##############################################
+
+# Arrange the datasets
+Data=Data %>% arrange(factor(Bead, levels=unique(Data$Bead)))
+Data7=Data7 %>% arrange(factor(Bead, levels=unique(Data7$Bead)))
+
+# Include experimental points
+Data7$DayE=c(Reduce(rbind,append(list(matrix(Data$Day,30)),rep(NA,21))))
+Data7$EggE=c(Reduce(rbind,append(list(matrix(Data$AveEgg,30)),rep(NA,21))))
+
+# Include positions for labels
+DataL=as.data.frame(Data7 %>% group_by(Bead,Strain) %>% filter(DayP == max(DayP)))
+Data7$DayM=c(Reduce(rbind,append(list(matrix(DataL$DayP,1)),rep(NA,50))))
+Data7$EggM=c(Reduce(rbind,append(list(matrix(DataL$EggP,1)),rep(NA,50))))
+
+# Create names for labels
+Data7$Labels=factor(Data7$Strain, levels=unique(Data7$Strain), labels=c(expression(C[R1]),expression(C[R2]),expression(C[R3]),expression(C[R4]),expression(C[R6]),expression(C[R7])))
+
+# Split the dataset
+SplitData7=split(Data7, list(Data7$Bead))
+
+PlotFunc=function(x) {
+  ggplot(x, aes(DayP, EggP, group=interaction(Strain,Bead))) +
+    geom_line(aes(color=Strain, linetype=Bead), size=1) +
+    geom_point(data=x, aes(DayE, EggE, color=Strain), size=2, pch=16, position=position_jitter(h=0, w=0.2)) +
+    geom_text_repel(x, mapping=aes(DayM, EggM, label=Labels, color=Strain), size=5, nudge_y=0, nudge_x=0.5, direction="y", segment.color="transparent", parse=T) +
+    ylab(expression(italic('B. calyciflorus')~'egg ratio'~'('*eggs~rotifer^-1*')')) + xlab(expression('Time (days)')) +
+    theme(axis.text.y=element_text(face="plain", colour="black", size=18)) +  
+    theme(axis.text.x=element_text(face="plain", colour="black", size=18)) + 
+    theme(axis.title.y=element_blank()) +
+    theme(axis.title.x=element_blank()) +
+    scale_x_continuous(labels=function(x) sprintf("%.0f", x), breaks=seq(0,5,by=1), limits=c(0,5.5)) +
+    theme(axis.line=element_line(colour="black")) + theme(panel.background=element_blank()) +
+    theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank()) +
+    scale_color_manual(values=c("CR1"="mediumpurple3","CR2"="cornflowerblue","CR3"="chartreuse3","CR4"="gold2","CR5"="darkorange1","CR6"="tomato2")) +
+    scale_linetype_manual(values=c("C"="solid","L"="solid","M"="solid","H"="solid")) +
+    theme(legend.position="none")
+}
+
+tiff('Reproduction Curves Beads.tiff', units="in", width=12, height=12, res=1000)
+Panel=lapply(SplitData7, PlotFunc)
+Panel[[1]]=Panel[[1]] + scale_y_continuous(labels=sprintf(seq(0,1.2,by=0.3), fmt="%.1f"), breaks=seq(0,1.2,by=0.3), limits=c(0,1.2))
+Panel[[2]]=Panel[[2]] + scale_y_continuous(labels=sprintf(seq(0,1.2,by=0.3), fmt="%.1f"), breaks=seq(0,1.2,by=0.3), limits=c(0,1.2))
+Panel[[3]]=Panel[[3]] + scale_y_continuous(labels=sprintf(seq(0,1.2,by=0.3), fmt="%.1f"), breaks=seq(0,1.2,by=0.3), limits=c(0,1.2))
+Panel[[4]]=Panel[[4]] + scale_y_continuous(labels=sprintf(seq(0,1.2,by=0.3), fmt="%.1f"), breaks=seq(0,1.2,by=0.3), limits=c(0,1.2))
+Panel[[1]]=Panel[[1]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.20),"cm"))
+Panel[[2]]=Panel[[2]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.20),"cm"))
+Panel[[3]]=Panel[[3]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.20),"cm"))
+Panel[[4]]=Panel[[4]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.20),"cm"))
+Yaxis=textGrob(expression(italic('B. calyciflorus')~'egg ratio'~'('*eggs~rotifer^-1*')'), gp=gpar(fontface="bold", fontsize=18), rot=90)
+Xaxis=textGrob(expression('Time (days)'), gp=gpar(fontface="bold", fontsize=18), rot=0)
+grid.arrange(grobs=Panel, left=Yaxis, bottom=Xaxis, ncol=2, nrow=2)
+dev.off()
+
+PlotFunc=function(x) {
+  ggplot(x, aes(DayP, EggP, group=interaction(Strain,Bead))) +
+    geom_line(aes(color=Strain, linetype=Bead), size=1) +
+    geom_ribbon(aes(ymin=EggPLSD, ymax=EggPUSD, fill=Strain, color=Strain), linetype="solid", size=0.5, alpha=0.3) +
+    geom_point(data=x, aes(DayE, EggE, color=Strain), size=2, pch=16, position=position_jitter(h=0, w=0.2)) +
+    geom_text_repel(x, mapping=aes(DayM, EggM, label=Labels, color=Strain), size=5, nudge_y=0, nudge_x=0.5, direction="y", segment.color="transparent", parse=T) +
+    ylab(expression(italic('B. calyciflorus')~'egg ratio'~'('*eggs~rotifer^-1*')')) + xlab(expression('Time (days)')) +
+    theme(axis.text.y=element_text(face="plain", colour="black", size=18)) +  
+    theme(axis.text.x=element_text(face="plain", colour="black", size=18)) + 
+    theme(axis.title.y=element_blank()) +
+    theme(axis.title.x=element_blank()) +
+    scale_x_continuous(labels=function(x) sprintf("%.0f", x), breaks=seq(0,5,by=1), limits=c(0,5.5)) +
+    theme(axis.line=element_line(colour="black")) + theme(panel.background=element_blank()) +
+    theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank()) +
+    scale_fill_manual(values=c("CR1"="mediumpurple3","CR2"="cornflowerblue","CR3"="chartreuse3","CR4"="gold2","CR5"="darkorange1","CR6"="tomato2")) +
+    scale_color_manual(values=c("CR1"="mediumpurple3","CR2"="cornflowerblue","CR3"="chartreuse3","CR4"="gold2","CR5"="darkorange1","CR6"="tomato2")) +
+    scale_linetype_manual(values=c("C"="solid","L"="solid","M"="solid","H"="solid")) +
+    theme(legend.position="none")
+}
+
+tiff('Reproduction Curves Beads Intervals.tiff', units="in", width=12, height=12, res=1000)
+Panel=lapply(SplitData7, PlotFunc)
+Panel[[1]]=Panel[[1]] + scale_y_continuous(labels=sprintf(seq(0,1.2,by=0.3), fmt="%.1f"), breaks=seq(0,1.2,by=0.3), limits=c(0,1.2))
+Panel[[2]]=Panel[[2]] + scale_y_continuous(labels=sprintf(seq(0,1.2,by=0.3), fmt="%.1f"), breaks=seq(0,1.2,by=0.3), limits=c(0,1.2))
+Panel[[3]]=Panel[[3]] + scale_y_continuous(labels=sprintf(seq(0,1.2,by=0.3), fmt="%.1f"), breaks=seq(0,1.2,by=0.3), limits=c(0,1.2))
+Panel[[4]]=Panel[[4]] + scale_y_continuous(labels=sprintf(seq(0,1.2,by=0.3), fmt="%.1f"), breaks=seq(0,1.2,by=0.3), limits=c(0,1.2))
+Panel[[1]]=Panel[[1]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.20),"cm"))
+Panel[[2]]=Panel[[2]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.20),"cm"))
+Panel[[3]]=Panel[[3]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.20),"cm"))
+Panel[[4]]=Panel[[4]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.20),"cm"))
+Yaxis=textGrob(expression(italic('B. calyciflorus')~'egg ratio'~'('*eggs~rotifer^-1*')'), gp=gpar(fontface="bold", fontsize=18), rot=90)
+Xaxis=textGrob(expression('Time (days)'), gp=gpar(fontface="bold", fontsize=18), rot=0)
+grid.arrange(grobs=Panel, left=Yaxis, bottom=Xaxis, ncol=2, nrow=2)
 dev.off()
