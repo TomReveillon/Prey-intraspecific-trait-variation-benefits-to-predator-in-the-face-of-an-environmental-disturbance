@@ -218,16 +218,12 @@ Data6=read.table("Data_FRBP.txt", h=T, dec=",")
 Data6[,c(3:8)] %<>% mutate_if(is.character,as.numeric)
 
 # Correct standard errors and confidence intervals
-Data5$IngesPLSD=ifelse(Data5$IngesPLSD < Data5$IngesP*0.80, Data5$IngesP*0.80, Data5$IngesPLSD)
-Data5$IngesPUSD=ifelse(Data5$IngesPUSD > Data5$IngesP*1.20, Data5$IngesP*1.20, Data5$IngesPUSD)
-Data5$IngesPLCI=ifelse(Data5$IngesPLCI < Data5$IngesP*0.80, Data5$IngesP*0.80, Data5$IngesPLCI)
-Data5$IngesPUCI=ifelse(Data5$IngesPUCI > Data5$IngesP*1.20, Data5$IngesP*1.20, Data5$IngesPUCI)
+Data5$IngesPLSD=ifelse(Data5$IngesPLSD==0, Data5$IngesP-Data5$IngesP*((lead(Data5$IngesP)-lead(Data5$IngesPLSD))/lead(Data5$IngesP)), Data5$IngesPLSD)
+Data5$IngesPUSD=ifelse(Data5$IngesPUSD==0, Data5$IngesP+Data5$IngesP*((lead(Data5$IngesPUSD)-lead(Data5$IngesP))/lead(Data5$IngesP)), Data5$IngesPUSD)
 
 # Correct standard errors and confidence intervals
-Data5$IngesPLSD=ifelse(Data5$IngesPLSD==0, Data5$IngesP+Data5$IngesP*((lead(Data5$IngesPLSD)+lead(Data5$IngesP))/lead(Data5$IngesP)), Data5$IngesPLSD)
-Data5$IngesPUSD=ifelse(Data5$IngesPUSD==0, Data5$IngesP+Data5$IngesP*((lead(Data5$IngesPUSD)-lead(Data5$IngesP))/lead(Data5$IngesP)), Data5$IngesPUSD)
-Data5$IngesPLCI=ifelse(Data5$IngesPLCI==0, Data5$IngesP+Data5$IngesP*((lead(Data5$IngesPLCI)+lead(Data5$IngesP))/lead(Data5$IngesP)), Data5$IngesPLCI)
-Data5$IngesPUCI=ifelse(Data5$IngesPUCI==0, Data5$IngesP+Data5$IngesP*((lead(Data5$IngesPUCI)-lead(Data5$IngesP))/lead(Data5$IngesP)), Data5$IngesPUCI)
+Data5$IngesPLSD=ifelse(Data5$IngesPLSD < Data5$IngesP*0.80, Data5$IngesP*0.80, Data5$IngesPLSD)
+Data5$IngesPUSD=ifelse(Data5$IngesPUSD > Data5$IngesP*1.20, Data5$IngesP*1.20, Data5$IngesPUSD)
 
 # Export the dataset
 Data5[,c(4:6)]=replace(Data5[,c(4:6)],Data5[,c(4:6)]<0,0)
@@ -301,14 +297,10 @@ Data5[,c(4:6)]=round(Data5[,c(4:6)],6)
 # Correct standard errors and confidence intervals
 Data5$IngesPLSD=ifelse(Data5$IngesPLSD==0, Data5$IngesP-Data5$IngesP*((lead(Data5$IngesP)-lead(Data5$IngesPLSD))/lead(Data5$IngesP)), Data5$IngesPLSD)
 Data5$IngesPUSD=ifelse(Data5$IngesPUSD==0, Data5$IngesP+Data5$IngesP*((lead(Data5$IngesPUSD)-lead(Data5$IngesP))/lead(Data5$IngesP)), Data5$IngesPUSD)
-Data5$IngesPLCI=ifelse(Data5$IngesPLCI==0, Data5$IngesP-Data5$IngesP*((lead(Data5$IngesP)-lead(Data5$IngesPLCI))/lead(Data5$IngesP)), Data5$IngesPLCI)
-Data5$IngesPUCI=ifelse(Data5$IngesPUCI==0, Data5$IngesP+Data5$IngesP*((lead(Data5$IngesPUCI)-lead(Data5$IngesP))/lead(Data5$IngesP)), Data5$IngesPUCI)
 
 # Correct standard errors and confidence intervals
 Data5$IngesPLSD=ifelse(Data5$IngesPLSD < Data5$IngesP*0.80, Data5$IngesP*0.80, Data5$IngesPLSD)
 Data5$IngesPUSD=ifelse(Data5$IngesPUSD > Data5$IngesP*1.20, Data5$IngesP*1.20, Data5$IngesPUSD)
-Data5$IngesPLCI=ifelse(Data5$IngesPLCI < Data5$IngesP*0.80, Data5$IngesP*0.80, Data5$IngesPLCI)
-Data5$IngesPUCI=ifelse(Data5$IngesPUCI > Data5$IngesP*1.20, Data5$IngesP*1.20, Data5$IngesPUCI)
 
 # Arrange the datasets
 Data=Data %>% arrange(factor(Bead, levels=unique(Data$Bead)))
@@ -377,6 +369,7 @@ PlotFunc=function(x) {
     geom_line(aes(color=Strain, linetype=Bead), size=1) +
     geom_line(data=x, aes(IDensC, IngesC, color=Strain), linetype="dotted", size=1) +
     geom_ribbon(aes(ymin=IngesPLSD, ymax=IngesPUSD, fill=Strain, color=Strain), linetype="solid", size=0.5, alpha=0.3) +
+    geom_point(data=x, aes(IDensE, IngesE, color=Strain), size=2, pch=16, position=position_jitter(h=0, w=0.2)) +
     geom_text(data=x, mapping=aes(x=-Inf, y=Inf, label=Bead), color="black", size=5, vjust=1.6, hjust=-1.5, parse=T) +
     ylab(expression(italic('B. calyciflorus')~'ingestion rate'~'('*10^-1~cells~sec^-1~rotifer^-1*')')) +
     xlab(expression(italic('C. reinhardtii')~'density'~'('*10^5~cells~mL^-1*')')) +
@@ -384,28 +377,28 @@ PlotFunc=function(x) {
     theme(axis.text.x=element_text(face="plain", colour="black", size=18)) + 
     theme(axis.title.y=element_blank()) +
     theme(axis.title.x=element_blank()) +
-    scale_x_continuous(labels=function(x) sprintf("%.1f", x), breaks=seq(0,15,by=3), limits=c(0,15)) +
+    scale_x_continuous(labels=function(x) sprintf("%.1f", x), breaks=seq(0,15,by=5), limits=c(0,15)) +
     theme(axis.line=element_line(colour="black")) + theme(panel.background=element_blank()) +
     theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank()) +
     scale_fill_manual(values=c("CR1"="mediumpurple3","CR2"="cornflowerblue","CR3"="chartreuse3","CR4"="gold2","CR5"="darkorange1","CR6"="tomato2")) +
     scale_color_manual(values=c("CR1"="mediumpurple3","CR2"="cornflowerblue","CR3"="chartreuse3","CR4"="gold2","CR5"="darkorange1","CR6"="tomato2")) +
     scale_linetype_manual(values=c("C"="solid","L"="solid","M"="solid","H"="solid")) +
-    theme(strip.text.x=element_blank()) +
-    facet_wrap(~Strain, scales="free", ncol=3, nrow=2) +
+    theme(strip.text.x=element_blank()) + theme(panel.spacing.x=unit(0.5,"cm")) +
+    facet_wrap(~Strain, scales="free", ncol=6, nrow=1) +
     theme(legend.position="none")
 }
 
-tiff('Functional Responses Beads ODE Intervals.tiff', units="in", width=25, height=16.5, res=1000)
+tiff('Functional Responses Beads ODE Intervals.tiff', units="in", width=20, height=13, res=1000)
 Panel=lapply(SplitData5, PlotFunc)
 Panel[[1]]=Panel[[1]] + scale_y_continuous(labels=sprintf(seq(0,6.0,by=2.0), fmt="%.1f"), breaks=seq(0,0.60,by=0.20), limits=c(0,0.60))
 Panel[[2]]=Panel[[2]] + scale_y_continuous(labels=sprintf(seq(0,1.8,by=0.6), fmt="%.1f"), breaks=seq(0,0.18,by=0.06), limits=c(0,0.18))
 Panel[[3]]=Panel[[3]] + scale_y_continuous(labels=sprintf(seq(0,1.8,by=0.6), fmt="%.1f"), breaks=seq(0,0.18,by=0.06), limits=c(0,0.18))
 Panel[[4]]=Panel[[4]] + scale_y_continuous(labels=sprintf(seq(0,0.3,by=0.1), fmt="%.1f"), breaks=seq(0,0.03,by=0.01), limits=c(0,0.03))
-Panel[[1]]=Panel[[1]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.20),"cm"))
-Panel[[2]]=Panel[[2]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.20),"cm"))
-Panel[[3]]=Panel[[3]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.20),"cm"))
-Panel[[4]]=Panel[[4]] + theme(plot.margin=unit(c(0.20,0.20,0.20,0.20),"cm"))
+Panel[[1]]=Panel[[1]] + theme(plot.margin=unit(c(0.20,0.50,0.20,0.20),"cm"))
+Panel[[2]]=Panel[[2]] + theme(plot.margin=unit(c(0.20,0.50,0.20,0.20),"cm"))
+Panel[[3]]=Panel[[3]] + theme(plot.margin=unit(c(0.20,0.50,0.20,0.20),"cm"))
+Panel[[4]]=Panel[[4]] + theme(plot.margin=unit(c(0.20,0.50,0.20,0.20),"cm"))
 Yaxis=textGrob(expression(italic('B. calyciflorus')~'ingestion rate'~'('*10^-1~cells~sec^-1~rotifer^-1*')'), gp=gpar(fontface="bold", fontsize=18), rot=90)
 Xaxis=textGrob(expression(italic('C. reinhardtii')~'density'~'('*10^5~cells~mL^-1*')'), gp=gpar(fontface="bold", fontsize=18), rot=0)
-grid.arrange(grobs=Panel, left=Yaxis, bottom=Xaxis, ncol=2, nrow=2)
+grid.arrange(grobs=Panel, left=Yaxis, bottom=Xaxis, ncol=1, nrow=4)
 dev.off()
