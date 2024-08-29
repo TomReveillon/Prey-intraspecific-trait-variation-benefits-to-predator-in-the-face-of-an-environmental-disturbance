@@ -370,7 +370,7 @@ PlotFunc=function(x) {
     geom_line(data=x, aes(IDensC, IngesC, color=Strain), linetype="dotted", size=1) +
     geom_ribbon(aes(ymin=IngesPLSD, ymax=IngesPUSD, fill=Strain, color=Strain), linetype="solid", size=0.5, alpha=0.3) +
     geom_point(data=x, aes(IDensE, IngesE, color=Strain), size=2, pch=16, position=position_jitter(h=0, w=0.2)) +
-    geom_text(data=x, mapping=aes(x=-Inf, y=Inf, label=Bead), color="black", size=5, vjust=1.6, hjust=-1.5, parse=T) +
+    geom_text(data=x, mapping=aes(x=-Inf, y=Inf, label=Bead), color="black", size=5, vjust=1.2, hjust=-1.5, parse=T) +
     ylab(expression(italic('B. calyciflorus')~'ingestion rate'~'('*10^-1~cells~sec^-1~rotifer^-1*')')) +
     xlab(expression(italic('C. reinhardtii')~'density'~'('*10^5~cells~mL^-1*')')) +
     theme(axis.text.y=element_text(face="plain", colour="black", size=18)) +  
