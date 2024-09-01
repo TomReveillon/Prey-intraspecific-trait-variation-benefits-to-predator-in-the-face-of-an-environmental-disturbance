@@ -213,62 +213,112 @@ CoefHII$Present=(20-Missing$Count)
 CoefHII$XpC=(CoefHII[,3]*CoefHII[,6]+0*CoefHII[,5])/(CoefHII[,5]+CoefHII[,6])
 
 # Create a dataset
-Data6=data.frame(Strain=CoefHII[,1], Bead=CoefHII[,2], DensB=rep(DensB[c(1,4,2,3)], each=6), Conv=CoefHII[,7], ConvPLSD=CoefHII[,7]-CoefHII[,4], ConvPUSD=CoefHII[,7]+CoefHII[,4])
+Data6=data.frame(Strain=CoefHII[,1], Bead=CoefHII[,2], DensB=rep(DensB[c(1,4,2,3)], each=6), ConvP=CoefHII[,7], ConvPLSD=CoefHII[,7]-CoefHII[,4], ConvPUSD=CoefHII[,7]+CoefHII[,4])
 Data6[,c(3:6)]=round(Data6[,c(3:6)],4)
 Data6[,c(3:6)][Data6[,c(3:6)]<0]=0
 Data6=Data6 %>% arrange(factor(Bead, levels=c("C","L","M","H")))
+
+
+###############################
+### Fitting elliptic models ###
+###############################
+
+# Split the dataset
+SplitData6=split(Data6, list(Data6$Strain))
+
+# Elliptic model
+plot(Data6$ConvP~Data6$DensB, ylab=c("Conversion efficiency"), xlab=c("Particle concentration"), pch=16)
+ModelCE=function(x) {xspline(x=x$DensB, y=x$ConvP, shape=0.8, draw=F)}
+ModelCELSD=function(x) {xspline(x=x$DensB, y=x$ConvPLSD, shape=0.8, draw=F)}
+ModelCEUSD=function(x) {xspline(x=x$DensB, y=x$ConvPUSD, shape=0.8, draw=F)}
+
+# Calculate the ellipses
+SplitData7=lapply(SplitData6, ModelCE)
+SplitData8=lapply(SplitData6, ModelCELSD)
+SplitData9=lapply(SplitData6, ModelCEUSD)
+
+# Extract lengths of ellipses
+Time1=do.call("rbind",lapply(lapply(SplitData7, function (x) x[[c("y")]]), function (x) length(x)))
+Time2=do.call("rbind",lapply(lapply(SplitData8, function (x) x[[c("y")]]), function (x) length(x)))
+Time3=do.call("rbind",lapply(lapply(SplitData9, function (x) x[[c("y")]]), function (x) length(x)))
 
 
 ################################################
 ### Plotting predicted conversion efficiency ###
 ################################################
 
-# Split the dataset
-SplitData6=split(Data6, list(Data6$Strain))
+# Create the datasets
+Strain1=c(rep("CR1",Time1[1]),rep("CR2",Time1[2]),rep("CR3",Time1[3]),rep("CR4",Time1[4]),rep("CR5",Time1[5]),rep("CR6",Time1[6]))
+Strain2=c(rep("CR1",Time2[1]),rep("CR2",Time2[2]),rep("CR3",Time2[3]),rep("CR4",Time2[4]),rep("CR5",Time2[5]),rep("CR6",Time2[6]))
+Strain3=c(rep("CR1",Time3[1]),rep("CR2",Time3[2]),rep("CR3",Time3[3]),rep("CR4",Time3[4]),rep("CR5",Time3[5]),rep("CR6",Time3[6]))
+Data7=data.frame(Strain=Strain1, DensBP=bind_rows(SplitData7)[[1]], ConvP=bind_rows(SplitData7)[[2]])
+Data8=data.frame(Strain=Strain2, DensBP=bind_rows(SplitData8)[[1]], ConvP=bind_rows(SplitData8)[[2]])
+Data9=data.frame(Strain=Strain3, DensBP=bind_rows(SplitData9)[[1]], ConvP=bind_rows(SplitData9)[[2]])
 
-# Create elliptic lines
-plot(Data6$Conv~Data6$DensB, ylab=c("Conversion efficiency"), xlab=c("Particle concentration"), pch=16)
-FuncSpline=function(x) {xspline(x=x$DensB, y=x$Conv, shape=0.8, draw=F)}
-SplitData7=lapply(SplitData6, FuncSpline)
-SplitData8=lapply(SplitData7, function (x) x[[c("y")]])
-Times=do.call("rbind",lapply(SplitData8, function (x) length(x)))
+# Split the datasets
+SplitData7=split(Data7, list(Data7$Strain))
+SplitData8=split(Data8, list(Data8$Strain))
+SplitData9=split(Data9, list(Data9$Strain))
 
-# Create a dataset
-Strain=c(rep("CR1",Times[1]),rep("CR2",Times[2]),rep("CR3",Times[3]),rep("CR4",Times[4]),rep("CR5",Times[5]),rep("CR6",Times[6]))
-Data7=data.frame(Strain=Strain, DensBP=bind_rows(SplitData7)[[1]], ConvP=bind_rows(SplitData7)[[2]])
-Data7[,c(2:3)]=round(Data7[,c(2:3)],4)
-Data7[,c(2:3)][Data7[,c(2:3)]<0]=0
+# Rescale the datasets
+FuncScale=function(x) {x=data.frame(Strain=rep(unique(x$Strain),125), DensBP=approx(x$DensBP,n=125)$y, ConvP=approx(x$ConvP,n=125)$y)}
+SplitData7=lapply(SplitData7, FuncScale)
+SplitData8=lapply(SplitData8, FuncScale)
+SplitData9=lapply(SplitData9, FuncScale)
+
+# Combine the datasets
+Data10=data.frame(do.call("rbind",SplitData7)[,c(1:3)], ConvPLSD=do.call("rbind",SplitData8)[,3], ConvPUSD=do.call("rbind",SplitData9)[,3])
+Data10[,c(2:5)][is.na(Data10[,c(2:5)])]=0
+Data10[,c(2:5)]=round(Data10[,c(2:5)],6)
+Data10[,c(2:5)][Data10[,c(2:5)]<0]=0
+rownames(Data10)=c()
 
 # Correct standard errors and confidence intervals
-Data7$ConvPLSD=ifelse(Data7$ConvPLSD==0, Data7$ConvP-Data7$ConvP*((lead(Data7$ConvP)-lead(Data7$ConvPLSD))/lead(Data7$ConvP)), Data7$ConvPLSD)
-Data7$ConvPUSD=ifelse(Data7$ConvPUSD==0, Data7$ConvP+Data7$ConvP*((lead(Data7$ConvPUSD)-lead(Data7$ConvP))/lead(Data7$ConvP)), Data7$ConvPUSD)
-Data7$ConvPLCI=ifelse(Data7$ConvPLCI==0, Data7$ConvP-Data7$ConvP*((lead(Data7$ConvP)-lead(Data7$ConvPLCI))/lead(Data7$ConvP)), Data7$ConvPLCI)
-Data7$ConvPUCI=ifelse(Data7$ConvPUCI==0, Data7$ConvP+Data7$ConvP*((lead(Data7$ConvPUCI)-lead(Data7$ConvP))/lead(Data7$ConvP)), Data7$ConvPUCI)
+Data10$ConvPLSD=ifelse(Data10$ConvPLSD==0, Data10$ConvP-Data10$ConvP*((lead(Data10$ConvP)-lead(Data10$ConvPLSD))/lead(Data10$ConvP)), Data10$ConvPLSD)
+Data10$ConvPUSD=ifelse(Data10$ConvPUSD==0, Data10$ConvP+Data10$ConvP*((lead(Data10$ConvPUSD)-lead(Data10$ConvP))/lead(Data10$ConvP)), Data10$ConvPUSD)
 
 # Correct standard errors and confidence intervals
-Data7$ConvPLSD=ifelse(Data7$ConvPLSD < Data7$ConvP*0.80, Data7$ConvP*0.80, Data7$ConvPLSD)
-Data7$ConvPUSD=ifelse(Data7$ConvPUSD > Data7$ConvP*1.20, Data7$ConvP*1.20, Data7$ConvPUSD)
-Data7$ConvPLCI=ifelse(Data7$ConvPLCI < Data7$ConvP*0.80, Data7$ConvP*0.80, Data7$ConvPLCI)
-Data7$ConvPUCI=ifelse(Data7$ConvPUCI > Data7$ConvP*1.20, Data7$ConvP*1.20, Data7$ConvPUCI)
+Data10$ConvPLSD=ifelse(Data10$ConvPLSD < Data10$ConvP*0.80, Data10$ConvP*0.80, Data10$ConvPLSD)
+Data10$ConvPUSD=ifelse(Data10$ConvPUSD > Data10$ConvP*1.20, Data10$ConvP*1.20, Data10$ConvPUSD)
 
 # Export the dataset
-Data7[,c(2:3)]=replace(Data7[,c(2:3)],Data7[,c(2:3)]<0,0)
-write.table(Data7, file="Data_CEB.txt", sep="\t", row.names=F)
+Data10[,c(3:5)]=replace(Data10[,c(3:5)],Data10[,c(3:5)]<0,0)
+write.table(Data10, file="Data_CEB.txt", sep="\t", row.names=F)
 
-tiff('Conversion Efficiency Beads.tiff', units="in", width=15, height=8, res=1000)
-ggplot(Data7, aes(DensBP*10, ConvP, group=Strain)) +
+tiff('Conversion Efficiency Beads.tiff', units="in", width=8, height=8, res=1000)
+ggplot(Data10, aes(DensBP*10, ConvP, group=Strain)) +
   geom_line(aes(color=Strain), linetype="solid", size=1) +
-  geom_point(data=Data6, aes(DensB*10, Conv, color=Strain), size=3, pch=16) +
+  geom_point(data=Data6, aes(DensB*10, ConvP, color=Strain), size=3, pch=16) +
   ylab(expression(italic('B. calyciflorus')~'conversion efficiency'~'('*rotifers~10^-6~cells*')')) +
   xlab(expression('Microplastic density'~'('*10^5~particles~mL^-1*')')) +
   theme(axis.text.y=element_text(face="plain", colour="black", size=18)) +  
   theme(axis.text.x=element_text(face="plain", colour="black", size=18)) + 
   theme(axis.title.y=element_text(face="plain", colour="black", size=18)) +
   theme(axis.title.x=element_text(face="plain", colour="black", size=18)) +
-  scale_y_continuous(labels=function(x) sprintf("%.0f", x), breaks=seq(0,200,by=50), limits=c(0,200)) +
+  scale_y_continuous(labels=function(x) sprintf("%.0f", x), breaks=seq(0,160,by=40), limits=c(0,160)) +
   scale_x_continuous(labels=function(x) sprintf("%.2f", x), breaks=seq(0,1.25,by=0.25), limits=c(0,1.25)) +
   theme(axis.line=element_line(colour="black")) + theme(panel.background=element_blank()) +
   theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank()) +
+  scale_color_manual(values=c("CR1"="mediumpurple3","CR2"="steelblue2","CR3"="chartreuse3","CR4"="gold2","CR5"="darkorange1","CR6"="tomato2")) +
+  theme(legend.position="none")
+dev.off()
+
+tiff('Conversion Efficiency Beads Intervals.tiff', units="in", width=15, height=8, res=1000)
+ggplot(Data10, aes(DensBP*10, ConvP, group=Strain)) +
+  geom_line(aes(color=Strain), linetype="solid", size=1) +
+  geom_point(data=Data6, aes(DensB*10, ConvP, color=Strain), size=3, pch=16) +
+  geom_ribbon(aes(ymin=ConvPLSD, ymax=ConvPUSD, fill=Strain, color=Strain), linetype="solid", size=0.5, alpha=0.3) +
+  ylab(expression(italic('B. calyciflorus')~'conversion efficiency'~'('*rotifers~10^-6~cells*')')) +
+  xlab(expression('Microplastic density'~'('*10^5~particles~mL^-1*')')) +
+  theme(axis.text.y=element_text(face="plain", colour="black", size=18)) +  
+  theme(axis.text.x=element_text(face="plain", colour="black", size=18)) + 
+  theme(axis.title.y=element_text(face="plain", colour="black", size=18)) +
+  theme(axis.title.x=element_text(face="plain", colour="black", size=18)) +
+  scale_y_continuous(labels=function(x) sprintf("%.0f", x), breaks=seq(0,160,by=40), limits=c(0,160)) +
+  scale_x_continuous(labels=function(x) sprintf("%.2f", x), breaks=seq(0,1.25,by=0.25), limits=c(0,1.25)) +
+  theme(axis.line=element_line(colour="black")) + theme(panel.background=element_blank()) +
+  theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank()) +
+  scale_fill_manual(values=c("CR1"="mediumpurple3","CR2"="steelblue2","CR3"="chartreuse3","CR4"="gold2","CR5"="darkorange1","CR6"="tomato2")) +
   scale_color_manual(values=c("CR1"="mediumpurple3","CR2"="steelblue2","CR3"="chartreuse3","CR4"="gold2","CR5"="darkorange1","CR6"="tomato2")) +
   theme(strip.text.x=element_blank()) +
   facet_wrap(~Strain, scales="free", ncol=3, nrow=2) +
