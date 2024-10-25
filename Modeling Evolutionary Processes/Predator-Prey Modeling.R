@@ -222,8 +222,8 @@ ggplot(Plot1ODE1, aes(Time, Density, group=Organism)) +
   scale_color_manual(values=alpha(c("A1"="royalblue2","P"="firebrick3"),0.8)) +
   scale_linetype_manual(values=c("A1"="solid","P"="solid")) +
   theme(strip.background=element_blank(), strip.text.x=element_blank()) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.0) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.0) +
+  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=0.9) +
+  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=0.9) +
   facet_wrap(P1~B, ncol=11, nrow=19) +
   theme(legend.position="none")
 dev.off()
@@ -246,8 +246,8 @@ ggplot(Plot2ODE1, aes(Time, Density, group=Organism)) +
   scale_color_manual(values=alpha(c("A"="royalblue2","P"="firebrick3"),0.8)) +
   scale_linetype_manual(values=c("A"="solid","R"="solid")) +
   theme(strip.background=element_blank(), strip.text.x=element_blank()) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.0) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.0) +
+  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=0.9) +
+  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=0.9) +
   facet_wrap(P1~B, ncol=11, nrow=19) +
   theme(legend.position="none")
 dev.off()
@@ -328,10 +328,7 @@ States1=ggplot(Data1, aes(B, P0, group=State, width=1)) +
   scale_fill_manual(values=alpha(c("SS"="royalblue2","CRC"="forestgreen","EX"="firebrick3"),0.8)) +
   theme(panel.spacing.y=unit(1,'lines'), panel.spacing.x=unit(0,'lines')) + 
   theme(strip.background=element_blank(), strip.text.y=element_blank()) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.0) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.0) +
-  annotate("segment", x=Inf, xend=Inf, y=-Inf, yend=Inf, color="black", size=1.4) +
-  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=1.6) +
+  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=0.9) +
   facet_wrap(~Phase, ncol=1, nrow=2, strip.position="right") +
   theme(legend.position="none")
 
@@ -377,10 +374,7 @@ Predator1=ggplot(Data2, aes(B, P0, group=PEnd, width=1)) +
   scale_pattern_manual(values=c("EX"="circle","CRC"="none","EC"="none","SS"="none")) +
   theme(panel.spacing.y=unit(1,'lines'), panel.spacing.x=unit(0,'lines')) + 
   theme(strip.background=element_blank(), strip.text.y=element_blank()) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.0) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.0) +
-  annotate("segment", x=Inf, xend=Inf, y=-Inf, yend=Inf, color="black", size=1.4) +
-  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=1.6) +
+  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=0.9) +
   facet_wrap(~Phase, ncol=1, nrow=2, strip.position="right") +
   theme(legend.position="none")
 
@@ -418,10 +412,7 @@ Prey1=ggplot(Data2, aes(B, P0, group=AEnd, width=1)) +
   scale_pattern_manual(values=c("EX"="circle","CRC"="none","EC"="none","SS"="none")) +
   theme(panel.spacing.y=unit(1,'lines'), panel.spacing.x=unit(0,'lines')) + 
   theme(strip.background=element_blank(), strip.text.y=element_blank()) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.0) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.0) +
-  annotate("segment", x=Inf, xend=Inf, y=-Inf, yend=Inf, color="black", size=1.4) +
-  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=1.6) +
+  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=0.9) +
   facet_wrap(~Phase, ncol=1, nrow=2, strip.position="right") +
   theme(legend.position="none")
 
@@ -561,8 +552,8 @@ ggplot(Plot1ODE2, aes(Time, Density, group=Organism)) +
   scale_color_manual(values=alpha(c("A1"="royalblue2","A2"="royalblue2","P"="firebrick3"),0.8)) +
   scale_linetype_manual(values=c("A1"="solid","A2"="11","P"="solid")) +
   theme(strip.background=element_blank(), strip.text.x=element_blank()) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.0) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.0) +
+  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=0.9) +
+  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=0.9) +
   facet_wrap(P1~B, ncol=11, nrow=19) +
   theme(legend.position="none")
 dev.off()
@@ -585,8 +576,8 @@ ggplot(Plot2ODE2, aes(Time, Density, group=Organism)) +
   scale_color_manual(values=alpha(c("A"="royalblue2","P"="firebrick3"),0.8)) +
   scale_linetype_manual(values=c("A"="solid","P"="solid")) +
   theme(strip.background=element_blank(), strip.text.x=element_blank()) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.0) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.0) +
+  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=0.9) +
+  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=0.9) +
   facet_wrap(P1~B, ncol=11, nrow=19) +
   theme(legend.position="none")
 dev.off()
@@ -689,10 +680,7 @@ States2=ggplot(Data3, aes(B, P0, group=State, width=1)) +
   scale_fill_manual(values=alpha(c("SS"="royalblue2","CRC"="darkorange3","EC"="darkorange3","EX"="firebrick3"),0.8)) +
   theme(panel.spacing.y=unit(1,'lines'), panel.spacing.x=unit(0,'lines')) + 
   theme(strip.background=element_blank(), strip.text.y=element_blank()) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.0) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.0) +
-  annotate("segment", x=Inf, xend=Inf, y=-Inf, yend=Inf, color="black", size=1.4) +
-  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=1.6) +
+  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=0.9) +
   facet_wrap(~Phase, ncol=1, nrow=2, strip.position="right") +
   theme(legend.position="none")
 
@@ -738,10 +726,7 @@ Predator2=ggplot(Data4, aes(B, P0, group=PEnd, width=1)) +
   scale_pattern_manual(values=c("EX"="circle","CRC"="none","EC"="none","SS"="none")) +
   theme(panel.spacing.y=unit(1,'lines'), panel.spacing.x=unit(0,'lines')) + 
   theme(strip.background=element_blank(), strip.text.y=element_blank()) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.0) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.0) +
-  annotate("segment", x=Inf, xend=Inf, y=-Inf, yend=Inf, color="black", size=1.4) +
-  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=1.6) +
+  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=0.9) +
   facet_wrap(~Phase, ncol=1, nrow=2, strip.position="right") +
   theme(legend.position="none")
 
@@ -796,10 +781,7 @@ Prey2=ggplot(Data4, aes(B, P0, group=AEnd, width=1)) +
   scale_pattern_manual(values=c("EX"="circle","CRC"="none","EC"="none","SS"="none")) +
   theme(panel.spacing.y=unit(1,'lines'), panel.spacing.x=unit(0,'lines')) + 
   theme(strip.background=element_blank(), strip.text.y=element_blank()) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.0) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.0) +
-  annotate("segment", x=Inf, xend=Inf, y=-Inf, yend=Inf, color="black", size=1.4) +
-  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=1.6) +
+  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=0.9) +
   facet_wrap(~Phase, ncol=1, nrow=2, strip.position="right") +
   theme(legend.position="none")
 
@@ -905,10 +887,7 @@ ggplot(subset(Data6, Organism=="1P"), aes(B, P0, width=1)) +
   scale_pattern_manual(values=c("EX"="circle","CRC"="none","EC"="none","SS"="none")) +
   theme(strip.background=element_blank(), strip.text.x=element_blank()) +
   theme(plot.title=element_text(face="plain", colour="black", size=22, vjust=2, hjust=0.5)) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.0) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.0) +
-  annotate("segment", x=Inf, xend=Inf, y=-Inf, yend=Inf, color="black", size=1.4) +
-  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=1.6) +
+  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=0.9) +
   guides(fill=guide_colorbar(title.position="top", title.hjust=0.5, ticks.colour=NA, barwidth=15), pattern="none") +
   theme(legend.title=element_text(size=14), legend.text=element_text(size=14)) +
   theme(legend.key.size=unit(1.5,"line"), legend.position="top") +
@@ -935,10 +914,7 @@ ggplot(subset(Data6, Organism=="2P"), aes(B, P0, width=1)) +
   scale_pattern_manual(values=c("EX"="circle","CRC"="none","EC"="none","SS"="none")) +
   theme(strip.background=element_blank(), strip.text.x=element_blank()) +
   theme(plot.title=element_text(face="plain", colour="black", size=22, vjust=2, hjust=0.5)) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.0) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.0) +
-  annotate("segment", x=Inf, xend=Inf, y=-Inf, yend=Inf, color="black", size=1.4) +
-  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=1.6) +
+  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=0.9) +
   guides(fill=guide_colorbar(title.position="top", title.hjust=0.5, ticks.colour=NA, barwidth=15), pattern="none") +
   theme(legend.title=element_text(size=14), legend.text=element_text(size=14)) +
   theme(legend.key.size=unit(1.5,"line"), legend.position="top") +
@@ -1006,10 +982,7 @@ ggplot(subset(Data6, Organism=="2P"), aes(B, P0, width=1)) +
   scale_pattern_manual(values=c("EX"="circle","CRC"="none","EC"="none","SS"="none")) +
   theme(strip.background=element_blank(), strip.text.x=element_blank()) +
   theme(plot.title=element_text(face="plain", colour="black", size=22, vjust=2, hjust=0.5)) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.0) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.0) +
-  annotate("segment", x=Inf, xend=Inf, y=-Inf, yend=Inf, color="black", size=1.4) +
-  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=1.6) +
+  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=0.9) +
   guides(fill=guide_colorbar(title.position="top", title.hjust=0.5, ticks.colour=NA, barwidth=15), pattern="none") +
   theme(legend.title=element_text(size=14), legend.text=element_text(size=14)) +
   theme(legend.key.size=unit(1.5,"line"), legend.position="top") +
@@ -1046,10 +1019,7 @@ ggplot(subset(Data5, Phase=="Post"), aes(B, P0, width=1)) +
   scale_pattern_manual(values=c("EX"="circle","CRC"="none","EC"="none","SS"="none")) +
   theme(strip.background=element_blank(), strip.text.x=element_blank()) +
   theme(plot.title=element_text(face="plain", colour="black", size=22, vjust=2, hjust=0.5)) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.0) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.0) +
-  annotate("segment", x=Inf, xend=Inf, y=-Inf, yend=Inf, color="black", size=1.4) +
-  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=1.6) +
+  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=0.9) +
   guides(fill=guide_colorbar(title.position="top", title.hjust=0.5, ticks.colour=NA, barwidth=15), pattern="none") +
   theme(legend.title=element_text(size=14), legend.text=element_text(size=14)) +
   theme(legend.key.size=unit(1.5,"line"), legend.position="top") +
@@ -1080,10 +1050,7 @@ ggplot(subset(Data5, Phase=="Post"), aes(B, P0, width=1)) +
   colours=c("firebrick3","white","royalblue2"), values=rescale(x=c(0,4/34,1.0),from=c(0,1.0)), na.value="white", breaks=c(-2,28), limits=c(-4,30)) +
   scale_pattern_manual(values=c("EX"="circle","CRC"="none","EC"="none","SS"="none")) +
   theme(plot.title=element_text(face="plain", colour="black", size=22, vjust=2, hjust=0.5)) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.0) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.0) +
-  annotate("segment", x=Inf, xend=Inf, y=-Inf, yend=Inf, color="black", size=1.4) +
-  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=1.6) +
+  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=0.9) +
   guides(fill=guide_colorbar(title.position="top", title.hjust=0.5, ticks.colour=NA, barwidth=15), pattern="none") +
   theme(legend.title=element_text(size=14), legend.text=element_text(size=14)) +
   theme(legend.key.size=unit(1.5,"line"), legend.position="top") +
@@ -1134,10 +1101,7 @@ ggplot(Data7, aes(B, P0, width=1)) +
   scale_pattern_manual(values=c("EX"="circle","EC"="none","CRC"="none","EC"="none","SS"="none")) +
   theme(strip.background=element_blank(), strip.text.x=element_blank()) +
   theme(plot.title=element_text(face="plain", colour="black", size=22, vjust=2, hjust=0.5)) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.0) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.0) +
-  annotate("segment", x=Inf, xend=Inf, y=-Inf, yend=Inf, color="black", size=1.4) +
-  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=1.6) +
+  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=0.9) +
   guides(fill=guide_colorbar(title.position="top", title.hjust=0.5, ticks.colour=NA, barwidth=15), pattern="none") +
   theme(legend.title=element_text(size=14), legend.text=element_text(size=14)) +
   theme(legend.key.size=unit(1.5,"line"), legend.position="top") +
@@ -1167,10 +1131,7 @@ ggplot(subset(Data6, Organism=="2P"), aes(B, P0, width=1)) +
   scale_fill_manual(values=alpha(c("IEP"="firebrick3","IER"="royalblue2","IEF"="forestgreen","No"="white"),0.6)) +
   scale_pattern_manual(values=c("EX"="circle","EC"="none","CRC"="none","EC"="none","SS"="none")) +
   theme(plot.title=element_text(face="plain", colour="black", size=22, vjust=2, hjust=0.5)) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.0) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.0) +
-  annotate("segment", x=Inf, xend=Inf, y=-Inf, yend=Inf, color="black", size=1.4) +
-  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=1.6) +
+  annotate("segment", x=-Inf, xend=Inf, y=Inf, yend=Inf, color="black", size=0.9) +
   guides(fill=guide_colorbar(title.position="top", title.hjust=0.5, ticks.colour=NA, barwidth=15), pattern="none") +
   theme(legend.title=element_text(size=14), legend.text=element_text(size=14)) +
   theme(legend.key.size=unit(1.5,"line"), legend.position="top") +
@@ -1203,9 +1164,11 @@ DataE$Organism=c(rep("1P",209),rep("2P",209))
 DataE[,c(2:5)]=round(DataE[,c(2:5)],4)
 write.table(DataE, file="~/Activité Professionnelle/LIMNO 2019-2023/Modeling/Data_ED.txt", sep="\t", row.names=F)
 
-# Extract the dataset
+# Extract the datasets
 Data5[,c(9:14)]=round(Data5[,c(9:14)],4)
-write.table(Data6, file="~/Activité Professionnelle/LIMNO 2019-2023/Modeling/Data_ODE1.txt", sep="\t", row.names=F)
+Data6[,c(9,11)]=round(Data6[,c(9,11)],4)
+write.table(Data5, file="~/Activité Professionnelle/LIMNO 2019-2023/Modeling/Data_MOD1.txt", sep="\t", row.names=F)
+write.table(Data6, file="~/Activité Professionnelle/LIMNO 2019-2023/Modeling/Data_MOD2.txt", sep="\t", row.names=F)
 
 
 #################################################
@@ -1238,8 +1201,8 @@ Data10=melt(Data10[,-c(2,13:14)], id.vars=c("Time","Ni","D","P1","P0","B","Defen
 Data10$Density=ifelse(Data10$System=="1P" & Data10$Organism=="A2", NA, Data10$Density)
 
 # Extract the dataset
-Data10[,c(11)]=round(Data10[,c(11)],0)
-write.table(Data10, file="~/Activité Professionnelle/LIMNO 2019-2023/Modeling/Data_ODE2.txt", sep="\t", row.names=F)
+Data10[,c(11)]=round(Data10[,c(11)],4)
+write.table(Data10, file="~/Activité Professionnelle/LIMNO 2019-2023/Modeling/Data_MOD3.txt", sep="\t", row.names=F)
 
 # Create the datasets
 Data10=subset(Data10, P1 %in% c("0.2","0.4","0.6") & B %in% c("0.02","0.04"))
@@ -1266,13 +1229,13 @@ ggplot(subset(Data10, System=="1P" &!Organism=="A"), aes(Time, Density)) +
   scale_x_continuous(labels=function(y) sprintf("%.0f", y), breaks=seq(0,200,by=50), limits=c(0,200)) +
   theme(panel.background=element_blank(), panel.border=element_blank()) +
   theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank()) +
-  theme(axis.line=element_line(colour="black", linetype="solid", size=0.8)) +
+  theme(axis.line=element_line(colour="black", linetype="solid", size=0.5)) +
   scale_color_manual(values=alpha(c("A1"="royalblue2","P"="firebrick3"),0.8)) +
   scale_linetype_manual(values=c("A1"="solid","P"="solid")) +
   theme(panel.spacing.y=unit(1,'lines'), panel.spacing.x=unit(1,'lines')) + 
   theme(strip.background=element_blank(), strip.text.x=element_blank()) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.2) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.2) +
+  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=0.9) +
+  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=0.9) +
   facet_wrap(B~P1, ncol=3, nrow=3) +
   theme(legend.position="non")
 dev.off()
@@ -1293,13 +1256,13 @@ ggplot(subset(Data10, System=="2P" &!Organism=="A"), aes(Time, Density)) +
   scale_x_continuous(labels=function(y) sprintf("%.0f", y), breaks=seq(0,200,by=50), limits=c(0,200)) +
   theme(panel.background=element_blank(), panel.border=element_blank()) +
   theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank()) +
-  theme(axis.line=element_line(colour="black", linetype="solid", size=0.8)) +
+  theme(axis.line=element_line(colour="black", linetype="solid", size=0.5)) +
   scale_color_manual(values=alpha(c("A1"="royalblue2","A2"="royalblue2","P"="firebrick3"),0.8)) +
   scale_linetype_manual(values=c("A1"="solid","A2"="11","P"="solid")) +
   theme(panel.spacing.y=unit(1,'lines'), panel.spacing.x=unit(1,'lines')) + 
   theme(strip.background=element_blank(), strip.text.x=element_blank()) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.2) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.2) +
+  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=0.9) +
+  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=0.9) +
   facet_wrap(B~P1, ncol=3, nrow=3) +
   theme(legend.position="none")
 dev.off()
@@ -1335,11 +1298,11 @@ ggplot(subset(Data11, System=="1P"), aes(P, A)) +
   scale_x_continuous(labels=function(x) sprintf("%.0f", x), breaks=seq(0,60,by=10), limits=c(0,60)) +
   theme(panel.background=element_blank(), panel.border=element_blank()) +
   theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank()) +
-  theme(axis.line=element_line(colour="black", linetype="solid", size=0.8)) +
+  theme(axis.line=element_line(colour="black", linetype="solid", size=0.5)) +
   theme(panel.spacing.y=unit(1,'lines'), panel.spacing.x=unit(1,'lines')) + 
   theme(strip.background=element_blank(), strip.text.x=element_blank()) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.2) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.2) +
+  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=0.9) +
+  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=0.9) +
   facet_wrap(B~P1, ncol=3, nrow=3) +
   theme(legend.position="none")
 
@@ -1474,15 +1437,15 @@ Data16$Weight=ifelse(Data16$Time==0, 1000, 1)
 # Specify the variables as numeric or factor
 Data16[,c(2:6)] %<>% mutate_if(is.integer,as.factor)
 
-tiff('Contribution Ecology Evolution.tiff', units="in", width=20, height=20, res=1000)
+tiff('Contribution Ecology Evolution.tiff', units="in", width=12, height=20, res=1000)
 ggplot(Data16, aes(Time, EcoEvo)) +
   geom_hline(yintercept=0, color="black", linetype="11", size=1.5) + 
   geom_smooth(aes(weight=Weight), method="loess", color=alpha("royalblue2",0.8), linetype="solid", size=2, span=0.4, se=F) +
   ylab(expression('Ln Ecology / Evolution')) + xlab(expression('Time (days)')) +    
-  theme(axis.text.y=element_text(face="plain", colour="black", size=24)) +  
-  theme(axis.text.x=element_text(face="plain", colour="black", size=24)) + 
-  theme(axis.title.y=element_text(face="plain", colour="black", size=24)) +
-  theme(axis.title.x=element_text(face="plain", colour="black", size=24)) +
+  theme(axis.text.y=element_text(face="plain", colour="black", size=12)) +  
+  theme(axis.text.x=element_text(face="plain", colour="black", size=12)) + 
+  theme(axis.title.y=element_text(face="plain", colour="black", size=12)) +
+  theme(axis.title.x=element_text(face="plain", colour="black", size=12)) +
   theme(axis.title.y.left=element_text(angle=90), axis.title.y.right=element_text(angle=90)) +
   scale_y_continuous(labels=function(y) sprintf("%.1f", y), breaks=seq(-3.0,3.0,by=1.5), limits=c(-3.0,3.0)) +
   scale_x_continuous(labels=function(y) sprintf("%.0f", y), breaks=seq(0,50,by=10), limits=c(0,50)) +
@@ -1491,9 +1454,8 @@ ggplot(Data16, aes(Time, EcoEvo)) +
   theme(axis.line=element_line(colour="black", linetype="solid", size=0.5)) +
   theme(panel.spacing.y=unit(1,'lines'), panel.spacing.x=unit(1,'lines')) + 
   theme(strip.background=element_blank(), strip.text.x=element_blank()) +
-  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=1.2) +
-  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=1.2) +
-  annotate("segment", x=Inf, xend=Inf, y=-Inf, yend=Inf, color="black", size=1.4) +
+  annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=-Inf, color="black", size=0.9) +
+  annotate("segment", x=-Inf, xend=-Inf, y=-Inf, yend=Inf, color="black", size=0.9) +
   facet_wrap(P1~B, ncol=11, nrow=19) +
   theme(legend.position="none")
 dev.off()
