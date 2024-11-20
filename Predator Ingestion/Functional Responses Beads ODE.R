@@ -345,7 +345,7 @@ PlotFunc=function(x) {
     theme(legend.position="none")
 }
 
-tiff('Functional Responses Beads ODE.tiff', units="in", width=12, height=12, res=1000)
+tiff('Functional Responses Beads ODE.tiff', units="in", width=12.5, height=12, res=1000)
 Panel=lapply(SplitData5, PlotFunc)
 Panel[[1]]=Panel[[1]] + scale_y_continuous(labels=sprintf(seq(0,6.0,by=1.5), fmt="%.1f"), breaks=seq(0,0.60,by=0.15), limits=c(0,0.60))
 Panel[[2]]=Panel[[2]] + scale_y_continuous(labels=sprintf(seq(0,1.6,by=0.4), fmt="%.1f"), breaks=seq(0,0.16,by=0.04), limits=c(0,0.16))
