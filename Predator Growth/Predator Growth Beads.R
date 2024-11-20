@@ -532,7 +532,7 @@ PlotFunc=function(x) {
     theme(legend.position="none")
 }
 
-tiff('Growth Curves Beads.tiff', units="in", width=12, height=12, res=1000)
+tiff('Growth Curves Beads.tiff', units="in", width=12.5, height=12, res=1000)
 Panel=lapply(SplitData4, PlotFunc)
 Panel[[1]]=Panel[[1]] + scale_y_continuous(labels=sprintf(seq(0,24,by=6), fmt="%.0f"), breaks=seq(0,24,by=6), limits=c(0,24))
 Panel[[2]]=Panel[[2]] + scale_y_continuous(labels=sprintf(seq(0,20,by=5), fmt="%.0f"), breaks=seq(0,20,by=5), limits=c(0,20))
@@ -754,7 +754,7 @@ PlotFunc=function(x) {
     theme(legend.position="none")
 }
 
-tiff('Reproduction Curves Beads.tiff', units="in", width=12, height=12, res=1000)
+tiff('Reproduction Curves Beads.tiff', units="in", width=12.5, height=12, res=1000)
 Panel=lapply(SplitData7, PlotFunc)
 Panel[[1]]=Panel[[1]] + scale_y_continuous(labels=sprintf(seq(0,1.2,by=0.3), fmt="%.1f"), breaks=seq(0,1.2,by=0.3), limits=c(0,1.2))
 Panel[[2]]=Panel[[2]] + scale_y_continuous(labels=sprintf(seq(0,1.2,by=0.3), fmt="%.1f"), breaks=seq(0,1.2,by=0.3), limits=c(0,1.2))
