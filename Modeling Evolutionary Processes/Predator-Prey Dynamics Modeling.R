@@ -1,4 +1,4 @@
-setwd("~/Activité Professionnelle/LIMNO 2019-2023/Modeling/Indirect Evolutionary Processes")
+setwd("~/ActivitÃ© Professionnelle/LIMNO 2019-2023/Modeling/Indirect Evolutionary Processes")
 
 rm(list=ls())
 
@@ -36,7 +36,7 @@ library(zoo)
 #############################################################################
 
 # Import the datasets
-DataC=read.table("~/Activité Professionnelle/LIMNO 2019-2023/Modeling/Data_CEB.txt", h=T, dec=",")
+DataC=read.table("~/ActivitÃ© Professionnelle/LIMNO 2019-2023/Modeling/Data_CEB.txt", h=T, dec=",")
 summary(DataC)
 names(DataC)
 
@@ -1162,13 +1162,13 @@ DataE$Organism=c(rep("1P",209),rep("2P",209))
 
 # Extract equilibrium densities
 DataE[,c(2:5)]=round(DataE[,c(2:5)],4)
-write.table(DataE, file="~/Activité Professionnelle/LIMNO 2019-2023/Modeling/Data_ED.txt", sep="\t", row.names=F)
+write.table(DataE, file="~/ActivitÃ© Professionnelle/LIMNO 2019-2023/Modeling/Data_ED.txt", sep="\t", row.names=F)
 
 # Extract the datasets
 Data5[,c(9:14)]=round(Data5[,c(9:14)],4)
 Data6[,c(9,11)]=round(Data6[,c(9,11)],4)
-write.table(Data5, file="~/Activité Professionnelle/LIMNO 2019-2023/Modeling/Data_MOD1.txt", sep="\t", row.names=F)
-write.table(Data6, file="~/Activité Professionnelle/LIMNO 2019-2023/Modeling/Data_MOD2.txt", sep="\t", row.names=F)
+write.table(Data5, file="~/ActivitÃ© Professionnelle/LIMNO 2019-2023/Modeling/Data_MOD1.txt", sep="\t", row.names=F)
+write.table(Data6, file="~/ActivitÃ© Professionnelle/LIMNO 2019-2023/Modeling/Data_MOD2.txt", sep="\t", row.names=F)
 
 
 #################################################
@@ -1202,7 +1202,7 @@ Data10$Density=ifelse(Data10$System=="1P" & Data10$Organism=="A2", NA, Data10$De
 
 # Extract the dataset
 Data10[,c(11)]=round(Data10[,c(11)],4)
-write.table(Data10, file="~/Activité Professionnelle/LIMNO 2019-2023/Modeling/Data_MOD3.txt", sep="\t", row.names=F)
+write.table(Data10, file="~/ActivitÃ© Professionnelle/LIMNO 2019-2023/Modeling/Data_MOD3.txt", sep="\t", row.names=F)
 
 # Create the datasets
 Data10=subset(Data10, P1 %in% c("0.2","0.4","0.6") & B %in% c("0.02","0.04"))
