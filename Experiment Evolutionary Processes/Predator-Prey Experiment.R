@@ -689,9 +689,8 @@ tiff('Contribution Ecology Evolution.tiff', units="in", width=14, height=5, res=
 ggplot(Data18, aes(Day, EcoEvo)) + coord_cartesian(clip="off") +
   geom_hline(aes(yintercept=0), color="black", linetype="11", size=1) + 
   geom_point(aes(Day, MeanEcoEvo), color="navyblue", size=2, pch=16) +
-  geom_smooth(aes(group=Trial, color=Trial), method="loess", linetype="solid", size=1, span=0.2, se=F) +
   geom_smooth(aes(Day, MeanEcoEvo), method="loess", color="navyblue", linetype="solid", size=1.5, span=0.2, se=F) +
-  geom_text(data=Data20, mapping=aes(y=3.0, x=50-(50+0)*0.02, label=paste(format(EcoEvo,nsmall=2))), color="navyblue", size=5, hjust=1) +
+  geom_text(data=Data20, mapping=aes(y=3.0, x=0+(50+0)*0.02, label=paste(format(EcoEvo,nsmall=2))), color="navyblue", size=5, hjust=0) +
   ylab(expression('Ratio of contributions')) + xlab(expression('Time (days)')) +    
   theme(axis.text.y.right=element_blank()) + 
   theme(axis.text.y.left=element_text(face="plain", colour="black", size=18)) +
@@ -700,7 +699,7 @@ ggplot(Data18, aes(Day, EcoEvo)) + coord_cartesian(clip="off") +
   theme(axis.title.y.left=element_text(face="plain", colour="black", size=18)) +
   theme(axis.title.x=element_text(face="plain", colour="black", size=18)) +
   scale_y_continuous(labels=function(y) sprintf("%.1f", y), breaks=seq(-3.0,3.0,by=1.5), limits=c(-3.0,3.0), 
-  sec.axis=sec_axis(~./1*1, expression('evolution > ecology        ecology > evolution'))) +
+  sec.axis=sec_axis(~./1*1, expression('Evolution > Ecology'~~~~~~~~~'Ecology > Evolution'))) +
   scale_x_continuous(labels=function(y) sprintf("%.0f", y), breaks=seq(0,50,by=10), limits=c(0,50)) +
   theme(panel.background=element_blank(), panel.border=element_blank()) +
   theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank()) +
