@@ -198,24 +198,22 @@ CoefHII=round(as.data.frame(do.call("rbind",CoefHII)),4)
 CoefHII=data.frame(Strain=rep(Strain[c(1:12,13:18,19:24)],each=2),Bead=rep(Bead[c(1:12,13:18,19:24)],each=2),Param=rep(Param,6*4),Value=c(CoefHII[,c(1)],rep(0,6*2)),ValueSD=c(CoefHII[,c(2)],rep(0,6*2)))
 CoefHII$ValueLSD=CoefHII[,4]-CoefHII[,5]
 CoefHII$ValueUSD=CoefHII[,4]+CoefHII[,5]
-CoefHII=CoefHII[,-c(5)]
 rownames(CoefHII)=c()
 
 # Specify the variables as numeric or factor
-CoefHII[,c(4:6)] %<>% mutate_if(is.character,as.numeric)
-CoefHII=subset(CoefHII, Param=="Xp")[,c(1:2,4:5)]
-CoefHII$Error[CoefHII$Error=="NaN"]=0
-colnames(CoefHII)[3:4]=c("Xp","XpSD")
+CoefHII[,c(4:7)] %<>% mutate_if(is.character,as.numeric)
+CoefHII=subset(CoefHII, Param=="Xp")[,c(1:7)]
+colnames(CoefHII)[4:7]=c("Xp","XpSD","XpLSD","XpUSD")
 
 # Pondering conversion efficiencies
 CoefHII=CoefHII[order(CoefHII$Bead),]
 Missing=Missing[order(Missing$Bead),]
 CoefHII$Absent=Missing$Count
-CoefHII$Present=(20-Missing$Count)
-CoefHII$XpC=(CoefHII[,3]*CoefHII[,6]+0*CoefHII[,5])/(CoefHII[,5]+CoefHII[,6])
+CoefHII$Present=20-Missing$Count
+CoefHII$XpC=(CoefHII[,4]*CoefHII[,9]+0*CoefHII[,8])/(CoefHII[,8]+CoefHII[,9])
 
 # Create a dataset
-Data6=data.frame(Strain=CoefHII[,1], Bead=CoefHII[,2], DensB=rep(DensB[c(1,4,2,3)], each=6), ConvP=CoefHII[,7], ConvPLSD=CoefHII[,7]-CoefHII[,4], ConvPUSD=CoefHII[,7]+CoefHII[,4])
+Data6=data.frame(Strain=CoefHII[,1], Bead=CoefHII[,2], DensB=rep(DensB[c(1,4,2,3)], each=6), ConvP=CoefHII[,10], ConvPLSD=CoefHII[,10]-CoefHII[,5], ConvPUSD=CoefHII[,10]+CoefHII[,5])
 Data6[,c(3:6)]=round(Data6[,c(3:6)],4)
 Data6[,c(3:6)][Data6[,c(3:6)]<0]=0
 
