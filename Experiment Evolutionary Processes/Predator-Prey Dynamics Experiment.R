@@ -657,8 +657,8 @@ Data18$Evo=ifelse(is.infinite(Data18$Evo), 0, Data18$Evo)
 Data18$EcoEvo=ifelse(is.infinite(Data18$EcoEvo), 0, Data18$EcoEvo)
 
 # Calculate the mean contributions
-Data18=setDT(na.omit(Data18))[, MeanEcoEvo := mean(EcoEvo), by=list(Strain,Bead,Day)]
-Data18=setDT(na.omit(Data18))[, HarmEcoEvo := mean(EcoEvo), by=list(Strain,Bead)]
+Data18=setDT(na.omit(Data18))[, EcoEvoAM := mean(EcoEvo), by=list(Strain,Bead,Day)]
+Data18=setDT(na.omit(Data18))[, EcoEvoHM := mean(EcoEvo), by=list(Strain,Bead)]
 Data18=as.data.frame(Data18)
 
 
@@ -668,10 +668,10 @@ Data18=as.data.frame(Data18)
 
 # Scale the dataset
 Data19=na.omit(Data18)
-Data19$ScaledEcoEvo=Data19$MeanEcoEvo+abs(min(Data19$MeanEcoEvo))
+Data19$ScaledEcoEvo=Data19$EcoEvoAM+abs(min(Data19$EcoEvoAM))
 
 # Calculate the coefficients
-Data20=setDT(Data19)[, .(CV=round((sd(ScaledEcoEvo)/mean(ScaledEcoEvo))*100,2), EcoEvo=round(HarmEcoEvo,2)), by=list(Strain,Bead)]
+Data20=setDT(Data19)[, .(CV=round((sd(ScaledEcoEvo)/mean(ScaledEcoEvo))*100,2), EcoEvo=round(EcoEvoHM,2)), by=list(Strain,Bead)]
 Data20=Data20[order(Data20$Strain,Data20$Bead),]
 Data20=as.data.frame(Data20)
 
@@ -694,8 +694,8 @@ write.table(Data18, file="Data_EXP2.txt", sep="\t", row.names=F)
 tiff('Contribution Ecology Evolution.tiff', units="in", width=14, height=5, res=1000)
 ggplot(Data18, aes(Day, EcoEvo)) + coord_cartesian(clip="off") +
   geom_hline(aes(yintercept=0), color="black", linetype="11", size=1) + 
-  geom_point(aes(Day, MeanEcoEvo), color="navyblue", size=2, pch=16) +
-  geom_smooth(aes(Day, MeanEcoEvo), method="loess", color="navyblue", linetype="solid", size=1.5, span=0.2, se=F) +
+  geom_point(aes(Day, EcoEvoAM), color="navyblue", size=2, pch=16) +
+  geom_smooth(aes(Day, EcoEvoAM), method="loess", color="navyblue", linetype="solid", size=1.5, span=0.2, se=F) +
   geom_text(data=Data20, mapping=aes(y=3.0, x=0+(50+0)*0.02, label=paste(format(EcoEvo,nsmall=2))), color="navyblue", size=5, hjust=0) +
   ylab(expression('Ratio of contributions')) + xlab(expression('Time (days)')) +    
   theme(axis.text.y.right=element_blank()) + 
