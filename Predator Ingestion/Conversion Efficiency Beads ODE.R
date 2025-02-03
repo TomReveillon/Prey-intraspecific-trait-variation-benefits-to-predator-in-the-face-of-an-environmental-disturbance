@@ -31,6 +31,10 @@ library(rootSolve)
 #####################################################################################
 #####################################################################################
 
+############################
+### Ingestion parameters ###
+############################
+
 # Import the dataset
 DataFRB=read.table("~/Activité Professionnelle/LIMNO 2019-2023/Experiments/Predator Ingestion Beads/Data_FRBPODE.txt", h=T, dec=",")
 summary(DataFRB)
@@ -38,6 +42,8 @@ names(DataFRB)
 
 # Specify the variables as numeric or factor
 DataFRB[,c(3:6)] %<>% mutate_if(is.character,as.numeric)
+
+# Arrange the dataset
 DataFRB$Strain=factor(DataFRB$Strain, levels=unique(DataFRB$Strain))
 DataFRB$Bead=factor(DataFRB$Bead, levels=unique(DataFRB$Bead))
 
@@ -71,6 +77,11 @@ HandlingsB=round(as.data.frame(do.call("rbind",HandlingsB)),4)
 HandlingsB=cbind(Strain=Strain,Bead=Bead,HandlingsB)
 rownames(HandlingsB)=c()
 
+
+#########################
+### Growth parameters ###
+#########################
+
 # Import the dataset
 DataRGB=read.table("~/Activité Professionnelle/LIMNO 2019-2023/Experiments/Predator Growth Beads/Data_RGB.txt", h=T, dec=",")
 summary(DataRGB)
@@ -78,6 +89,8 @@ names(DataRGB)
 
 # Specify the variables as numeric or factor
 DataRGB[,c(3:6)] %<>% mutate_if(is.character,as.numeric)
+
+# Arrange the dataset
 DataRGB=DataRGB %>% arrange(factor(Bead, levels=c("C","L","M","H")), factor(Strain, levels=c("CR1","CR2","CR3","CR4","CR5","CR6")))
 DataRGB$Strain=factor(DataRGB$Strain, levels=unique(DataRGB$Strain))
 DataRGB$Bead=factor(DataRGB$Bead, levels=unique(DataRGB$Bead))
@@ -85,6 +98,11 @@ DataRGB$Bead=factor(DataRGB$Bead, levels=unique(DataRGB$Bead))
 # Calculate difference between initial and final densities
 DataRGB2=setDT(DataRGB)[, .(Diffe=as.numeric(tail(Count,1) - head(Count,1))), by=list(Strain,Bead,Trial)]
 DataRGB2=as.data.frame(DataRGB2)
+
+
+####################################
+### Conversion efficiency models ###
+####################################
 
 # Functional response parameters
 DensB=c(0,0.03125,0.0625,0.1250)
@@ -105,16 +123,14 @@ Data3$DDensA=rep(NA,600)
 SplitData3=split(Data3, list(Data3$Strain,Data3$Bead,Data3$Trial))
 
 # Calculate ingestion rate
-for (i in 1:length(SplitData3)) {
-  for (j in 1:length(SplitData3[[i]][,1])) {
-    SplitData3[[i]]$Inges[j]=(SplitData3[[i]][j,9] * SplitData3[[i]][j,7])/(1 + SplitData3[[i]][j,9] * SplitData3[[i]][j,10] * SplitData3[[i]][j,7] + SplitData3[[i]][j,11] * SplitData3[[i]][j,8])
-    SplitData3[[i]]$DDensA[j]=SplitData3[[i]][j,7] - SplitData3[[i]][j,12] * SplitData3[[i]][j,5]
-    SplitData3[[i]][j+1,7]=SplitData3[[i]][j,13]
-  }
-}
+FuncIR=function(x) {for (i in 1:(nrow(x))) {  
+  x$Inges[i]=(x$a[i] * x$DensA0[i])/(1 + x$a[i] * x$h[i] * x$DensA0[i] + x$c[i] * x$DensB[i])
+  x$DDensA[i]=x$DensA0[i] - x$Inges[i] * x$DensR0[i]
+  x[i+1,7]=x$DDensA[i]}
+  return(as.data.frame(x))}
 
 # Bind the lists
-Data4=bind_rows(SplitData3)
+Data4=bind_rows(lapply(SplitData3, FuncIR))
 Data4=Data4[complete.cases(Data4),]
 Data4[,c(7,12:13)]=round(Data4[,c(7,12:13)],6)
 rownames(Data4)=c()
