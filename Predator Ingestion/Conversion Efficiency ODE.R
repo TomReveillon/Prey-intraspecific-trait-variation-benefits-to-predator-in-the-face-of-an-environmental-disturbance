@@ -36,7 +36,7 @@ library(rootSolve)
 ############################
 
 # Import the dataset
-DataFRB=read.table("~/Activité Professionnelle/LIMNO 2019-2023/Experiments/Predator Ingestion Beads/Data_FRBPODE.txt", h=T, dec=",")
+DataFRB=read.table("~/ActivitÃ© Professionnelle/LIMNO 2019-2023/Experiments/Predator Ingestion Beads/Data_FRBPODE.txt", h=T, dec=",")
 summary(DataFRB)
 names(DataFRB)
 
@@ -83,7 +83,7 @@ rownames(HandlingsB)=c()
 #########################
 
 # Import the dataset
-DataRGB=read.table("~/Activité Professionnelle/LIMNO 2019-2023/Experiments/Predator Growth Beads/Data_RGB.txt", h=T, dec=",")
+DataRGB=read.table("~/ActivitÃ© Professionnelle/LIMNO 2019-2023/Experiments/Predator Growth Beads/Data_RGB.txt", h=T, dec=",")
 summary(DataRGB)
 names(DataRGB)
 
