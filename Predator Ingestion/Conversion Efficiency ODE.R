@@ -36,7 +36,7 @@ library(rootSolve)
 ############################
 
 # Import the dataset
-DataFRB=read.table("~/ActivitÃ© Professionnelle/LIMNO 2019-2023/Experiments/Predator Ingestion Beads/Data_FRBPODE.txt", h=T, dec=",")
+DataFRB=read.table("~/Activité Professionnelle/LIMNO 2019-2023/Experiments/Predator Ingestion Beads/Data_FRBPODE.txt", h=T, dec=",")
 summary(DataFRB)
 names(DataFRB)
 
@@ -83,7 +83,7 @@ rownames(HandlingsB)=c()
 #########################
 
 # Import the dataset
-DataRGB=read.table("~/ActivitÃ© Professionnelle/LIMNO 2019-2023/Experiments/Predator Growth Beads/Data_RGB.txt", h=T, dec=",")
+DataRGB=read.table("~/Activité Professionnelle/LIMNO 2019-2023/Experiments/Predator Growth Beads/Data_RGB.txt", h=T, dec=",")
 summary(DataRGB)
 names(DataRGB)
 
@@ -115,7 +115,7 @@ H=round((HandlingsB[,3]/60/60/24)*(10^6),6)
 # Create a dataset
 Data=subset(DataRGB, !Day==0)
 Data2=subset(DataRGB, !Day==5)
-Data3=data.frame(Strain=Data$Strain, Bead=Data$Bead, Day=Data$Day, Trial=Data$Trial, DensR0=Data2$Count, DensR=Data$Count, DensA0=rep(c(rep(0.5,5),rep(NA,20)),6*4), DensB=rep(DensB,each=150), a=rep(A,each=25), h=rep(H,each=25), c=rep(C,each=25*4))
+Data3=data.frame(Strain=Data$Strain, Bead=Data$Bead, Day=Data$Day, Trial=Data$Trial, DensR0=Data2$Count, DensR=Data$Count, DensA0=rep(c(rep(0.5,5),rep(NA,20)),6*4), DensB=rep(DensB,each=150), a=rep(A,each=25), h=rep(H,each=25), c=rep(C,each=25*4), m=rep(0.2,each=25*4))
 Data3$Inges=rep(NA,600)
 Data3$DDensA=rep(NA,600)
 
@@ -132,7 +132,7 @@ FuncIR=function(x) {for (i in 1:(nrow(x))) {
 # Bind the lists
 Data4=bind_rows(lapply(SplitData3, FuncIR))
 Data4=Data4[complete.cases(Data4),]
-Data4[,c(7,12:13)]=round(Data4[,c(7,12:13)],6)
+Data4[,c(7,13:14)]=round(Data4[,c(7,13:14)],6)
 rownames(Data4)=c()
 
 # Order the dataset
@@ -143,7 +143,7 @@ Data4$Bead=factor(Data4$Bead, levels=unique(Data4$Bead))
 
 # Include decreasing prey densities
 Data4$DensA=as.data.frame(subset(Data4, !Day==1) %>% group_by(Strain,Bead,Trial) %>% group_modify(~add_row(.x,.after=4)))[,7]
-Data4=Data4[,c(1:7,14,8:13)]
+Data4=Data4[,c(1:7,15,8:14)]
 
 # Create a dataset
 Data5=data.frame(Strain=Data4[,1], Bead=Data4[,2], Trial=Data4[,4], Time=rep(5,600), a=Data4[,10], h=Data4[,11], IDensA=Data4[,7], FDensA=Data4[,8], IDensR=rep(5,600), FDensR=Data4[,6])
@@ -162,7 +162,7 @@ Param=unique(c("Xp","sigma"))
 
 # Create an integrating formula
 Repro='dxdt[0] = (-a * x[0]) / (1 + a * h * x[0]) * x[1];
-       dxdt[1] = x[1] * Xp * (a * x[0]) / (1 + a * h * x[0]);'
+       dxdt[1] = x[1] * Xp * (a * x[0]) / (1 + a * h * x[0]) - x[1] * x[3];'
 compile_sys("Repro", Repro, pars=c("a","h","Xp"), method="rk54")
 
 # Functional response function
@@ -173,20 +173,20 @@ Inges=function(Start, a, h, Xp, Time, Time_Length){
 
 # Densities depletion function
 DDensA=c(); NDensR=c()
-DensEaten=function(IDensA, a, h, Xp, Time, P, steps=100){
+DensEaten=function(IDensA, a, h, Xp, m, Time, P, steps=100){
   for(i in 1:length(IDensA)){
     DEaten=Inges(Start=c(IDensA[i], P[i]), a=a[i], h=h[i], Xp=Xp, Time=Time[i], Time_Length=Time[i]/steps)
     DDensA[i]=IDensA[i] - DEaten[steps+1,2]
-    NDensR[i]=DEaten[steps+1,3] - P[i]
+    NDensR[i]=DEaten[steps+1,3] - P[i] - (P[i] * m[i])
   }
   Out=list(DDensA, NDensR, DEaten)
   return(Out)
 }
 
 # Maximum likelihood function
-Likelihood=function(NDeadA, IDensA, a, h, Xp, Time, P, PEnd, sigma, steps=100){
+Likelihood=function(NDeadA, IDensA, a, h, Xp, m, Time, P, PEnd, sigma, steps=100){
   if(Xp <= 0 || sigma <= 0) return(Inf)
-  DEaten2=DensEaten(IDensA=IDensA, a=a, h=h, Xp=Xp, Time=Time, P=P, steps=steps)
+  DEaten2=DensEaten(IDensA=IDensA, a=a, h=h, Xp=Xp, m=m, Time=Time, P=P, steps=steps)
   LR1=-1*sum(dnorm(x=log((IDensA-NDeadA)+1), mean=log((IDensA-DEaten2[[1]])+1), sd=sigma, log=T))
   LR2=-1*sum(dpois(x=PEnd, lambda=P+DEaten2[[2]], log=T))
   LR=LR1+LR2
@@ -202,10 +202,10 @@ Missing=data.frame(Strain=Strain,Bead=Bead,Count=do.call("rbind",Missing))
 SplitData=lapply(SplitData, function(x) {x[x$FDensR > 4,]})
 
 # Fitting the model
-FuncHII1=function(x) {ModHII=mle2(Likelihood, start=list(Xp=200, sigma=1), control=list(maxit=1000), data=list(a=x$a, h=x$h, IDensA=x$IDensA, NDeadA=x$IDensA-x$FDensA, P=x$IDensR, PEnd=x$FDensR, Time=x$Time))}
+FuncHII1=function(x) {ModHII=mle2(Likelihood, start=list(Xp=200, sigma=1), control=list(maxit=1000), data=list(a=x$a, h=x$h, m=x$m, IDensA=x$IDensA, NDeadA=x$IDensA-x$FDensA, P=x$IDensR, PEnd=x$FDensR, Time=x$Time))}
 OutHII1=lapply(SplitData[c(1:12)], FuncHII1)
 
-FuncHII2=function(x) {ModHII=mle2(Likelihood, start=list(Xp=20, sigma=1), control=list(maxit=1000), data=list(a=x$a, h=x$h, IDensA=x$IDensA, NDeadA=x$IDensA-x$FDensA, P=x$IDensR, PEnd=x$FDensR, Time=x$Time))}
+FuncHII2=function(x) {ModHII=mle2(Likelihood, start=list(Xp=20, sigma=1), control=list(maxit=1000), data=list(a=x$a, h=x$h, m=x$m, IDensA=x$IDensA, NDeadA=x$IDensA-x$FDensA, P=x$IDensR, PEnd=x$FDensR, Time=x$Time))}
 OutHII2=lapply(SplitData[c(13:18)], FuncHII2)
 
 CoefHII=lapply(c(OutHII1,OutHII2), summary)
