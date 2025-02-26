@@ -115,7 +115,7 @@ H=round((HandlingsB[,3]/60/60/24)*(10^6),6)
 # Create a dataset
 Data=subset(DataRGB, !Day==0)
 Data2=subset(DataRGB, !Day==5)
-Data3=data.frame(Strain=Data$Strain, Bead=Data$Bead, Day=Data$Day, Trial=Data$Trial, DensR0=Data2$Count, DensR=Data$Count, DensA0=rep(c(rep(0.5,5),rep(NA,20)),6*4), DensB=rep(DensB,each=150), a=rep(A,each=25), h=rep(H,each=25), c=rep(C,each=25*4), m=rep(0.2,each=25*4))
+Data3=data.frame(Strain=Data$Strain, Bead=Data$Bead, Day=Data$Day, Trial=Data$Trial, DensR0=Data2$Count, DensR=Data$Count, DensA0=rep(c(rep(0.5,5),rep(NA,20)),6*4), DensB=rep(DensB,each=150), a=rep(A,each=25), h=rep(H,each=25), c=rep(C,each=25*4), m=rep(0.10,each=25*4))
 Data3$Inges=rep(NA,600)
 Data3$DDensA=rep(NA,600)
 
@@ -146,7 +146,7 @@ Data4$DensA=as.data.frame(subset(Data4, !Day==1) %>% group_by(Strain,Bead,Trial)
 Data4=Data4[,c(1:7,15,8:14)]
 
 # Create a dataset
-Data5=data.frame(Strain=Data4[,1], Bead=Data4[,2], Trial=Data4[,4], Time=rep(5,600), a=Data4[,10], h=Data4[,11], IDensA=Data4[,7], FDensA=Data4[,8], IDensR=rep(5,600), FDensR=Data4[,6])
+Data5=data.frame(Strain=Data4[,1], Bead=Data4[,2], Trial=Data4[,4], Time=rep(5,600), a=Data4[,10], h=Data4[,11], m=Data4[,13], IDensA=Data4[,7], FDensA=Data4[,8], IDensR=rep(5,600), FDensR=Data4[,6])
 Data5=na.omit(Data5)
 
 # Split the dataset
